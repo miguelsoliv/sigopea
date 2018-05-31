@@ -1,0 +1,452 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{35AD6E2A-7F76-4297-B399-10B4DC026569}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>TCC</RootNamespace>
+    <AssemblyName>TCC</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Windows.Forms.DataVisualization" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Migrations\201608151337523_regCreaCau.cs" />
+    <Compile Include="Migrations\201608151337523_regCreaCau.Designer.cs">
+      <DependentUpon>201608151337523_regCreaCau.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201608221349040_tabelasNNDosRegistros.cs" />
+    <Compile Include="Migrations\201608221349040_tabelasNNDosRegistros.Designer.cs">
+      <DependentUpon>201608221349040_tabelasNNDosRegistros.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201608241401175_tabelasNNDasPessoas.cs" />
+    <Compile Include="Migrations\201608241401175_tabelasNNDasPessoas.Designer.cs">
+      <DependentUpon>201608241401175_tabelasNNDasPessoas.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201609121946528_criacaoDeLogs.cs" />
+    <Compile Include="Migrations\201609121946528_criacaoDeLogs.Designer.cs">
+      <DependentUpon>201609121946528_criacaoDeLogs.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201609122203319_mudancaTipoDeAtributo.cs" />
+    <Compile Include="Migrations\201609122203319_mudancaTipoDeAtributo.Designer.cs">
+      <DependentUpon>201609122203319_mudancaTipoDeAtributo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201609130049449_mudancaTipoDeAtributo2.cs" />
+    <Compile Include="Migrations\201609130049449_mudancaTipoDeAtributo2.Designer.cs">
+      <DependentUpon>201609130049449_mudancaTipoDeAtributo2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201609281805250_criacaoDePalavrasProibidas.cs" />
+    <Compile Include="Migrations\201609281805250_criacaoDePalavrasProibidas.Designer.cs">
+      <DependentUpon>201609281805250_criacaoDePalavrasProibidas.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201611160236172_alteracoesFinais.cs" />
+    <Compile Include="Migrations\201611160236172_alteracoesFinais.Designer.cs">
+      <DependentUpon>201611160236172_alteracoesFinais.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Model\Classes\Acoes.cs" />
+    <Compile Include="Model\Classes\Agendamentos.cs" />
+    <Compile Include="Model\Classes\Cidades.cs" />
+    <Compile Include="Model\Classes\Clientes.cs" />
+    <Compile Include="Model\Classes\Estados.cs" />
+    <Compile Include="Model\Classes\Fotos.cs" />
+    <Compile Include="Model\Classes\Logs.cs" />
+    <Compile Include="Model\Classes\ObrasFornecedores.cs" />
+    <Compile Include="Model\Classes\ObrasTrabalhadores.cs" />
+    <Compile Include="Model\Classes\PalavrasProibidas.cs" />
+    <Compile Include="Model\Classes\RegCau.cs" />
+    <Compile Include="Model\Classes\RegCauProjeto.cs" />
+    <Compile Include="Model\Classes\RegCrea.cs" />
+    <Compile Include="Model\Classes\RegCreaProjeto.cs" />
+    <Compile Include="Model\Classes\Responsavel.cs" />
+    <Compile Include="Model\Classes\Usuarios.cs" />
+    <Compile Include="Model\DAO\AcoesDAO.cs" />
+    <Compile Include="Model\DAO\AgendamentosDAO.cs" />
+    <Compile Include="Model\DAO\CidadesDAO.cs" />
+    <Compile Include="Model\DAO\ClientesDAO.cs" />
+    <Compile Include="Model\DAO\EstadosDAO.cs" />
+    <Compile Include="Model\Classes\Fornecedores.cs" />
+    <Compile Include="Model\Classes\Trabalhadores.cs" />
+    <Compile Include="Model\Classes\ModelDB.cs" />
+    <Compile Include="Model\DAO\FornecedoresDAO.cs" />
+    <Compile Include="Model\DAO\FotosDAO.cs" />
+    <Compile Include="Model\DAO\LogsDAO.cs" />
+    <Compile Include="Model\DAO\ObrasDAO.cs" />
+    <Compile Include="Model\DAO\ObrasFornecedoresDAO.cs" />
+    <Compile Include="Model\DAO\ObrasTrabalhadoresDAO.cs" />
+    <Compile Include="Model\DAO\ObservacoesDAO.cs" />
+    <Compile Include="Model\DAO\PalavrasProibidasDAO.cs" />
+    <Compile Include="Model\DAO\ProjetosDAO.cs" />
+    <Compile Include="Model\DAO\RegCauDAO.cs" />
+    <Compile Include="Model\DAO\RegCauProjetoDAO.cs" />
+    <Compile Include="Model\DAO\RegCreaDAO.cs" />
+    <Compile Include="Model\DAO\RegCreaProjetoDAO.cs" />
+    <Compile Include="Model\DAO\ResponsavelDAO.cs" />
+    <Compile Include="Model\DAO\StatusDAO.cs" />
+    <Compile Include="Model\DAO\TrabalhadoresDAO.cs" />
+    <Compile Include="Model\DAO\UsuariosDAO.cs" />
+    <Compile Include="Model\Classes\Obras.cs" />
+    <Compile Include="Model\Classes\Observacoes.cs" />
+    <Compile Include="Model\Classes\Projetos.cs" />
+    <Compile Include="Model\Classes\Status.cs" />
+    <Compile Include="Model\MDIBorder.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="View\Add\AddAgendamento.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Add\AddAgendamento.Designer.cs">
+      <DependentUpon>AddAgendamento.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Add\AddForn.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Add\AddForn.Designer.cs">
+      <DependentUpon>AddForn.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Add\AddFoto.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Add\AddFoto.Designer.cs">
+      <DependentUpon>AddFoto.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Add\AddObservacao.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Add\AddObservacao.Designer.cs">
+      <DependentUpon>AddObservacao.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Add\AddReg.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Add\AddReg.Designer.cs">
+      <DependentUpon>AddReg.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Add\AddTrab.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Add\AddTrab.Designer.cs">
+      <DependentUpon>AddTrab.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Admin\PalavrasProibidasAdmin.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Admin\PalavrasProibidasAdmin.Designer.cs">
+      <DependentUpon>PalavrasProibidasAdmin.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Backup.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Backup.Designer.cs">
+      <DependentUpon>Backup.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Carregando.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Carregando.Designer.cs">
+      <DependentUpon>Carregando.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\EnvioDeEmail.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\EnvioDeEmail.Designer.cs">
+      <DependentUpon>EnvioDeEmail.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\FormLogin.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\FormLogin.Designer.cs">
+      <DependentUpon>FormLogin.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\GrafObras.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\GrafObras.Designer.cs">
+      <DependentUpon>GrafObras.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Listagens-Cadastros\ListClientes.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Listagens-Cadastros\ListClientes.Designer.cs">
+      <DependentUpon>ListClientes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Listagens-Cadastros\ListForn.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Listagens-Cadastros\ListForn.Designer.cs">
+      <DependentUpon>ListForn.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Listagens-Cadastros\ListTrab.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Listagens-Cadastros\ListTrab.Designer.cs">
+      <DependentUpon>ListTrab.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Admin\LogsAdmin.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Admin\LogsAdmin.Designer.cs">
+      <DependentUpon>LogsAdmin.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\MenuPrincipal.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\MenuPrincipal.Designer.cs">
+      <DependentUpon>MenuPrincipal.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Movimentos\MovObras.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Movimentos\MovObras.Designer.cs">
+      <DependentUpon>MovObras.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Movimentos\MovProjetos.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Movimentos\MovProjetos.Designer.cs">
+      <DependentUpon>MovProjetos.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Notificacao.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Notificacao.Designer.cs">
+      <DependentUpon>Notificacao.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Pesquisas\PesqClientes.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Pesquisas\PesqClientes.Designer.cs">
+      <DependentUpon>PesqClientes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Pesquisas\PesqForn.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Pesquisas\PesqForn.Designer.cs">
+      <DependentUpon>PesqForn.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Pesquisas\PesqTrab.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Pesquisas\PesqTrab.Designer.cs">
+      <DependentUpon>PesqTrab.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\RecupDados.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\RecupDados.Designer.cs">
+      <DependentUpon>RecupDados.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\RelObras.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\RelObras.Designer.cs">
+      <DependentUpon>RelObras.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="Migrations\201608151337523_regCreaCau.resx">
+      <DependentUpon>201608151337523_regCreaCau.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201608221349040_tabelasNNDosRegistros.resx">
+      <DependentUpon>201608221349040_tabelasNNDosRegistros.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201608241401175_tabelasNNDasPessoas.resx">
+      <DependentUpon>201608241401175_tabelasNNDasPessoas.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201609121946528_criacaoDeLogs.resx">
+      <DependentUpon>201609121946528_criacaoDeLogs.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201609122203319_mudancaTipoDeAtributo.resx">
+      <DependentUpon>201609122203319_mudancaTipoDeAtributo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201609130049449_mudancaTipoDeAtributo2.resx">
+      <DependentUpon>201609130049449_mudancaTipoDeAtributo2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201609281805250_criacaoDePalavrasProibidas.resx">
+      <DependentUpon>201609281805250_criacaoDePalavrasProibidas.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611160236172_alteracoesFinais.resx">
+      <DependentUpon>201611160236172_alteracoesFinais.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="View\Add\AddAgendamento.resx">
+      <DependentUpon>AddAgendamento.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Add\AddForn.resx">
+      <DependentUpon>AddForn.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Add\AddFoto.resx">
+      <DependentUpon>AddFoto.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Add\AddObservacao.resx">
+      <DependentUpon>AddObservacao.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Add\AddReg.resx">
+      <DependentUpon>AddReg.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Add\AddTrab.resx">
+      <DependentUpon>AddTrab.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Admin\PalavrasProibidasAdmin.resx">
+      <DependentUpon>PalavrasProibidasAdmin.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Backup.resx">
+      <DependentUpon>Backup.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Carregando.resx">
+      <DependentUpon>Carregando.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\EnvioDeEmail.resx">
+      <DependentUpon>EnvioDeEmail.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\FormLogin.resx">
+      <DependentUpon>FormLogin.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\GrafObras.resx">
+      <DependentUpon>GrafObras.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Listagens-Cadastros\ListClientes.resx">
+      <DependentUpon>ListClientes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Listagens-Cadastros\ListForn.resx">
+      <DependentUpon>ListForn.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Listagens-Cadastros\ListTrab.resx">
+      <DependentUpon>ListTrab.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Admin\LogsAdmin.resx">
+      <DependentUpon>LogsAdmin.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\MenuPrincipal.resx">
+      <DependentUpon>MenuPrincipal.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Movimentos\MovObras.resx">
+      <DependentUpon>MovObras.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Movimentos\MovProjetos.resx">
+      <DependentUpon>MovProjetos.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Notificacao.resx">
+      <DependentUpon>Notificacao.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Pesquisas\PesqClientes.resx">
+      <DependentUpon>PesqClientes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Pesquisas\PesqForn.resx">
+      <DependentUpon>PesqForn.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Pesquisas\PesqTrab.resx">
+      <DependentUpon>PesqTrab.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\RecupDados.resx">
+      <DependentUpon>RecupDados.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\RelObras.resx">
+      <DependentUpon>RelObras.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.5.2">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.5.2 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
