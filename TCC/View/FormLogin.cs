@@ -39,6 +39,9 @@ namespace TCC.View
 
         public FormLogin()
         {
+            // Set database programatically
+            AppDomain.CurrentDomain.SetData("DataDirectory", Environment.GetFolderPath(Environment.SpecialFolder.Desktop));
+
             InitializeComponent();
             palavrasDAO = new PalavrasProibidasDAO();
             usuariosDAO = new UsuariosDAO();
