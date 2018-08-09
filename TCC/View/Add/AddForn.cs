@@ -12,10 +12,6 @@ namespace TCC.View.Add
         private ObrasDAO obrasDAO { get; set; }
         private ObrasFornecedoresDAO ofDAO { get; set; }
         private FornecedoresDAO fornecedoresDAO { get; set; }
-        private Obras obra;
-        private Fornecedores forn;
-        private ObrasFornecedores of;
-        private bool verif;
 
         public AddForn(string id)
         {
@@ -34,7 +30,6 @@ namespace TCC.View.Add
             checkboxColumn2.Width = 20;
             dataGridForn.Columns.Add(checkboxColumn2);
 
-            // Largura das colunas (o default é 100)
             dataGridForn.Columns["Id"].Width = 45;
             dataGridForn.Columns["Fornecedor.Nome"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             #endregion
@@ -46,9 +41,8 @@ namespace TCC.View.Add
         {
             try
             {
-                // limpa as linhas da grid
                 dataGridForn.Rows.Clear();
-                
+
                 IEnumerable<ObrasFornecedores> listaOF = ofDAO.select().Where(x => x.Obra.Id == Convert.ToInt16(textId.Text));
 
                 if (listaOF.Count() < 1)
@@ -62,7 +56,7 @@ namespace TCC.View.Add
                 {
                     foreach (Fornecedores forn in fornecedoresDAO.select())
                     {
-                        verif = true;
+                        bool verif = true;
 
                         foreach (ObrasFornecedores obrasForn in listaOF)
                         {
@@ -73,7 +67,7 @@ namespace TCC.View.Add
                             }
                         }
 
-                        if(verif == true)
+                        if (verif == true)
                         {
                             dataGridForn.Rows.Add(forn.Id, forn.Nome);
                         }
@@ -92,11 +86,11 @@ namespace TCC.View.Add
             {
                 if (Convert.ToBoolean(row.Cells[2].Value))
                 {
-                    obra = new Obras();
+                    Obras obra = new Obras();
                     obra = obrasDAO.select().Where(x => x.Id == Convert.ToInt16(textId.Text)).First();
-                    forn = new Fornecedores();
+                    Fornecedores forn = new Fornecedores();
                     forn = fornecedoresDAO.select().Where(x => x.Id == Convert.ToInt16(row.Cells[0].Value)).First();
-                    of = new ObrasFornecedores();
+                    ObrasFornecedores of = new ObrasFornecedores();
                     of.Obra = obra;
                     of.Fornecedor = forn;
                     of.Observacao = textObs.Text;
@@ -109,9 +103,7 @@ namespace TCC.View.Add
 
         private void btCancelar_Click(object sender, EventArgs e)
         {
-            #region Botão cancelar
             this.Close();
-            #endregion
         }
     }
 }

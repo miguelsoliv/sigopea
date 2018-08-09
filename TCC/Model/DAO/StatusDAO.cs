@@ -13,11 +13,20 @@ namespace TCC.Model.DAO
             db = new ModelDB();
         }
 
+        public void insert(Status statusInf)
+        {
+            db.Status.Add(statusInf);
+            db.SaveChanges();
+        }
+
         public IEnumerable<Status> select()
         {
-            #region Lista de status das obras/projetos
             return db.Status.ToList();
-            #endregion
+        }
+
+        public int checarInserts()
+        {
+            return db.Status.ToList().Count();
         }
     }
 }

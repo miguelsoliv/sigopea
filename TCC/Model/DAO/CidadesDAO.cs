@@ -16,26 +16,18 @@ namespace TCC.Model.DAO
 
         public IEnumerable<Cidades> select()
         {
-            #region Lista de cidades, com o comando SQL distinct
-            return db.Cidades.Include(x => x.Estado).ToList().Distinct().OrderBy(x => x.Nome);
-            #endregion
+            return db.Cidades.Include(x => x.Estado).Distinct().OrderBy(x => x.Nome).ToList();
         }
 
         public IEnumerable<Cidades> selectPorEstado(int estado)
         {
-            #region Lista de cidades, que recebe o código do estado como parâmetro
-            // Include "inclui" dados da tabela relacionada na listagem
-            // Obs.: para usar o include deve ser adicionado nos using do cabeçalho:
-            // using System.Data.Entity;
-            return db.Cidades.Include(x => x.Estado).ToList().Where(x => x.Estado.Id == estado);
-            #endregion
+            return db.Cidades.Include(x => x.Estado).Where(x => x.Estado.Id == estado).ToList();
         }
 
-        public IEnumerable<Cidades> selectCidade(int id_cidade)
+        public Cidades selectCidade(int id)
         {
-            #region Select com somente uma cidade, que será utilizada na hora de carregar os dados do cliente/trabalhador/etc no groupBox
-            return db.Cidades.Include(x => x.Estado).ToList().Where(x => x.Id == id_cidade);
-            #endregion
+            // Select com somente uma cidade, que será utilizada na hora de carregar os dados do cliente/trabalhador/etc no groupBox
+            return db.Cidades.Include(x => x.Estado).Where(x => x.Id == id).First();
         }
     }
 }

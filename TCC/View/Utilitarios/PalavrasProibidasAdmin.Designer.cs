@@ -120,7 +120,6 @@
             this.dataGridView.TabIndex = 9;
             this.dataGridView.CellMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridView_CellMouseDoubleClick);
             this.dataGridView.SelectionChanged += new System.EventHandler(this.dataGridView_SelectionChanged);
-            this.dataGridView.KeyDown += new System.Windows.Forms.KeyEventHandler(this.dataGridView_KeyDown);
             // 
             // btSair
             // 

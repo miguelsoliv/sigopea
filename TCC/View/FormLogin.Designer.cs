@@ -61,6 +61,7 @@
             this.toolTipPolitica = new System.Windows.Forms.ToolTip(this.components);
             this.toolTipRandom = new System.Windows.Forms.ToolTip(this.components);
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
+            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.tabControl.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -394,6 +395,11 @@
             this.errorProvider.ContainerControl = this;
             this.errorProvider.Icon = ((System.Drawing.Icon)(resources.GetObject("errorProvider.Icon")));
             // 
+            // backgroundWorker1
+            // 
+            this.backgroundWorker1.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker1_DoWork);
+            this.backgroundWorker1.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker1_RunWorkerCompleted);
+            // 
             // FormLogin
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -406,7 +412,7 @@
             this.Name = "FormLogin";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Sistema - Login";
-            this.Activated += new System.EventHandler(this.FormLogin_Activated);
+            this.Load += new System.EventHandler(this.FormLogin_Load);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormLogin_KeyDown);
             this.tabControl.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
@@ -453,5 +459,6 @@
         private System.Windows.Forms.ToolTip toolTipRandom;
         private System.Windows.Forms.PictureBox pictureBoxSenha;
         private System.Windows.Forms.ErrorProvider errorProvider;
+        private System.ComponentModel.BackgroundWorker backgroundWorker1;
     }
 }

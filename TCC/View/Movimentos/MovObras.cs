@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Windows.Forms;
+using TCC.Model;
 using TCC.Model.Classes;
 using TCC.Model.DAO;
 using TCC.View.Add;
@@ -24,23 +25,14 @@ namespace TCC.View.Movimentos
         private ObrasFornecedoresDAO ofDAO { get; set; }
         private ObrasTrabalhadoresDAO otDAO { get; set; }
         private ResponsavelDAO respDAO { get; set; }
-        private Responsavel resp;
-        private ObrasFornecedores of;
-        private Fotos foto;
         private Obras obra;
-        private Agendamentos agendamento;
-        private AddTrab addTrab;
-        private AddForn addForn;
-        private Clientes cliente;
-        private Cidades cidade;
-        private AddAgendamento addAgendamento;
-        private AddFoto addFoto;
+        private Fotos foto;
+        private Responsavel resp;
         private DialogResult resposta;
         private IEnumerable<Obras> listaObras;
-        private DataGridViewImageColumn img, img2, img3, img4;
         private bool existe;
         private string id, path = @"C:\xampp\htdocs\fotos\";
-        private int idObra, verif;
+        private int idObra;
 
         public MovObras()
         {
@@ -69,36 +61,34 @@ namespace TCC.View.Movimentos
             dataGridView1.Columns.Add("Endereco", "Endereço");
             dataGridView1.Columns.Add("PrazoEstipulado", "Entrega");
 
-            // Criação da coluna de imagens
-            img = new DataGridViewImageColumn();
-            img.Image = MenuPrincipal.imageTrab();
+            DataGridViewImageColumn img = new DataGridViewImageColumn();
+            img.Image = Variaveis.getTrab();
             dataGridView1.Columns.Add(img);
             img.HeaderText = "";
             img.Name = "img";
             img.ImageLayout = DataGridViewImageCellLayout.Zoom;
 
-            img2 = new DataGridViewImageColumn();
-            img2.Image = MenuPrincipal.imageForn();
+            DataGridViewImageColumn img2 = new DataGridViewImageColumn();
+            img2.Image = Variaveis.getForn();
             dataGridView1.Columns.Add(img2);
             img2.HeaderText = "";
             img2.Name = "img2";
             img2.ImageLayout = DataGridViewImageCellLayout.Zoom;
 
-            img3 = new DataGridViewImageColumn();
-            img3.Image = MenuPrincipal.imageAgend();
+            DataGridViewImageColumn img3 = new DataGridViewImageColumn();
+            img3.Image = Variaveis.getAgend();
             dataGridView1.Columns.Add(img3);
             img3.HeaderText = "";
             img3.Name = "img3";
             img3.ImageLayout = DataGridViewImageCellLayout.Zoom;
 
-            img4 = new DataGridViewImageColumn();
-            img4.Image = MenuPrincipal.imageFoto();
+            DataGridViewImageColumn img4 = new DataGridViewImageColumn();
+            img4.Image = Variaveis.getFoto();
             dataGridView1.Columns.Add(img4);
             img4.HeaderText = "";
             img4.Name = "img4";
             img4.ImageLayout = DataGridViewImageCellLayout.Zoom;
 
-            // Largura das colunas (o default é 100)
             dataGridView1.Columns["Id"].Width = 50;
             dataGridView1.Columns["Cliente.Nome"].Width = 200;
             dataGridView1.Columns["Estado.Sigla"].Width = 35;
@@ -122,7 +112,7 @@ namespace TCC.View.Movimentos
             }
             catch
             {
-                //MessageBox.Show(ex.Message);
+                
             }
             #endregion
 
@@ -135,13 +125,11 @@ namespace TCC.View.Movimentos
             }
             catch
             {
-                //MessageBox.Show(ex.Message);
+                
             }
             #endregion
 
-            #region Carregar cidades [carregarCidades()]
             carregarCidades();
-            #endregion
         }
 
         private void dataGridView1_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
@@ -172,10 +160,8 @@ namespace TCC.View.Movimentos
 
         private void MovObras_Activated(object sender, EventArgs e)
         {
-            #region Carregar obras e clientes quando o form for focado
             carregarObras(0);
             carregarClientes();
-            #endregion
         }
 
         private void carregarObras(int tipo)
@@ -183,12 +169,10 @@ namespace TCC.View.Movimentos
             #region Carregar obras no dataGridView
             try
             {
-                // limpa as linhas da grid
                 dataGridView1.Rows.Clear();
 
                 switch (tipo)
                 {
-                    // preenche as colunas
                     case 0:
                         listaObras = obrasDAO.select();
                         break;
@@ -201,15 +185,13 @@ namespace TCC.View.Movimentos
 
                 foreach (Obras o in listaObras)
                 {
-                    foreach (Cidades cid in cidadesDAO.selectCidade(o.Cidade.Id))
-                    {
-                        dataGridView1.Rows.Add(o.Id, o.Cliente.Nome, o.Status.Nome, cid.Estado.Sigla, o.Cidade.Nome, o.Endereco, o.PrazoEstipulado.ToString("dd/MM/yyyy"));
-                    }
+                    Cidades cid = cidadesDAO.selectCidade(o.Cidade.Id);
+                    dataGridView1.Rows.Add(o.Id, o.Cliente.Nome, o.Status.Nome, cid.Estado.Sigla, o.Cidade.Nome, o.Endereco, o.PrazoEstipulado.ToString("dd/MM/yyyy"));
                 }
             }
             catch
             {
-                //MessageBox.Show(ex.Message);
+                
             }
             #endregion
         }
@@ -252,9 +234,7 @@ namespace TCC.View.Movimentos
                 groupBoxObras.Text = "Alteração de Obra";
                 #endregion
 
-                #region Carregar dados da obra no groupBox [carregarInfObra()]
                 carregarInfObra();
-                #endregion
             }
         }
 
@@ -275,7 +255,7 @@ namespace TCC.View.Movimentos
                 #region Botão alterar agendamento: alterar o assunto/observação do agendamento selecionado
                 try
                 {
-                    agendamento = new Agendamentos();
+                    Agendamentos agendamento = new Agendamentos();
                     agendamento.Id = Convert.ToInt16(listBoxAgend.Text);
                     agendamento.Assunto = textAssunto.Text.Trim();
                     agendamento.Observacao = textAgend.Text.Trim();
@@ -398,12 +378,12 @@ namespace TCC.View.Movimentos
             if (listBoxResp.Items.Count == 0)
             {
                 btSalvarResp.Text = "&Salvar";
-                btSalvarResp.Image = MenuPrincipal.imageSalvar();
+                btSalvarResp.Image = Variaveis.getSalvar();
             }
             else
             {
                 btSalvarResp.Text = "&Alterar";
-                btSalvarResp.Image = MenuPrincipal.imageAlterar();
+                btSalvarResp.Image = Variaveis.getAlterar();
             }
         }
 
@@ -462,29 +442,19 @@ namespace TCC.View.Movimentos
                 switch (tabControlDet.SelectedIndex)
                 {
                     case 0:
-                        #region Carregar os dados da obra [carregarInfObra()]
                         carregarInfObra();
-                        #endregion
                         break;
                     case 1:
-                        #region Carregar os agendamentos da obra selecionada [carregarInfAgend(0)]
                         carregarInfAgend(0);
-                        #endregion
                         break;
                     case 2:
-                        #region Carregar trabalhadores e fornecedores relacionados com a obra selecionada [carregarInfPessoas()]
                         carregarInfPessoas();
-                        #endregion
                         break;
                     case 3:
-                        #region Carregar as fotos da obra selecionada [carregarInfFoto()]
                         carregarInfFoto();
-                        #endregion
                         break;
                     case 4:
-                        #region Carregar o responsável pela obra selecionada [carregarInfResp()]
                         carregarInfResp();
-                        #endregion
                         break;
                 }
             }
@@ -501,29 +471,19 @@ namespace TCC.View.Movimentos
                     switch (tabControlDet.SelectedIndex)
                     {
                         case 0:
-                            #region Carregar os dados da obra [carregarInfObra()]
                             carregarInfObra();
-                            #endregion
                             break;
                         case 1:
-                            #region Carregar os agendamentos da obra selecionada [carregarInfAgend(0)]
                             carregarInfAgend(0);
-                            #endregion
                             break;
                         case 2:
-                            #region Carregar trabalhadores e fornecedores relacionados com a obra selecionada [carregarInfPessoas()]
                             carregarInfPessoas();
-                            #endregion
                             break;
                         case 3:
-                            #region Carregar as fotos da obra selecionada [carregarInfFoto()]
                             carregarInfFoto();
-                            #endregion
                             break;
                         case 4:
-                            #region Carregar o responsável da obra selecionada [carregarInfResp()]
                             carregarInfResp();
-                            #endregion
                             break;
                     }
                 }
@@ -532,16 +492,12 @@ namespace TCC.View.Movimentos
 
         private void listBoxData_SelectedIndexChanged(object sender, EventArgs e)
         {
-            #region Carregar agendamentos relacionados à data selecionada [carregarInfAgend(1)]
             carregarInfAgend(1);
-            #endregion
         }
 
         private void listBoxAgend_SelectedIndexChanged(object sender, EventArgs e)
         {
-            #region Carregar texto do agendamento selecionado [carregarInfAgend(2)]
             carregarInfAgend(2);
-            #endregion
         }
 
         private void listBoxFoto_SelectedIndexChanged(object sender, EventArgs e)
@@ -567,44 +523,35 @@ namespace TCC.View.Movimentos
             #region Carregar dados da obra nos itens do groupBox
             try
             {
-                foreach (Obras o in obrasDAO.select(Convert.ToInt16(dataGridView1.CurrentRow.Cells["ID"].Value.ToString())))
-                {
+                Obras o = obrasDAO.select(Convert.ToInt16(dataGridView1.CurrentRow.Cells["ID"].Value.ToString()));
+                comboCliente.Focus();
 
-                    comboCliente.Focus();
+                Cidades cid = cidadesDAO.selectCidade(o.Cidade.Id);
+                comboUF.SelectedValue = cid.Estado.Id;
 
-                    foreach (Cidades cid in cidadesDAO.selectCidade(o.Cidade.Id))
-                    {
-                        comboUF.SelectedValue = cid.Estado.Id;
-                    }
-
-                    comboCliente.SelectedValue = o.Cliente.Id;
-                    comboStatus.SelectedValue = o.Status.Id;
-                    comboCidade.SelectedValue = o.Cidade.Id;
-                    textEndereco.Text = o.Endereco;
-                    textPreco.Text = "" + o.Preco;
-                    dateTimeInicio.Value = Convert.ToDateTime(o.DataInicio);
-                    dateTimeEntrega.Value = Convert.ToDateTime(o.PrazoEstipulado);
-                }
+                comboCliente.SelectedValue = o.Cliente.Id;
+                comboStatus.SelectedValue = o.Status.Id;
+                comboCidade.SelectedValue = o.Cidade.Id;
+                textEndereco.Text = o.Endereco;
+                textPreco.Text = "" + o.Preco;
+                dateTimeInicio.Value = Convert.ToDateTime(o.DataInicio);
+                dateTimeEntrega.Value = Convert.ToDateTime(o.PrazoEstipulado);
             }
             catch
             {
-                //MessageBox.Show(ex.Message);
+                
             }
             #endregion
         }
 
         private void btExcluir_Click(object sender, EventArgs e)
         {
-            #region Excluir obra clicando no botão excluir [excluirObra()]
             excluirObra();
-            #endregion
         }
 
         private void btExcluirAgend_Click(object sender, EventArgs e)
         {
-            #region Botão excluir agendamento [excluirAgend()]
             excluirAgend();
-            #endregion
         }
 
         private void excluirAgend()
@@ -696,7 +643,7 @@ namespace TCC.View.Movimentos
             {
                 try
                 {
-                    of = new ObrasFornecedores();
+                    ObrasFornecedores of = new ObrasFornecedores();
                     of = ofDAO.select().Where(x => x.Fornecedor.Id == Convert.ToInt16(listBoxIdForn.Text) && x.Obra.Id == Convert.ToInt16(idObra)).First();
                     of.Observacao = textObs.Text.Trim();
                     ofDAO.update(of);
@@ -714,12 +661,10 @@ namespace TCC.View.Movimentos
 
         private void dataGridView1_KeyDown(object sender, KeyEventArgs e)
         {
-            #region Excluir obra [excluirObra()] ao pressionar a tecla delete, tendo uma linha selecionada
             if (e.KeyCode == Keys.Delete && groupBoxObras.Visible == false)
             {
                 excluirObra();
             }
-            #endregion
         }
 
         private void excluirObra()
@@ -776,7 +721,7 @@ namespace TCC.View.Movimentos
         {
             #region Validação de campos
             limparErros();
-            verif = 0;
+            int verif = 0;
 
             if (comboCliente.SelectedIndex == -1)
             {
@@ -836,7 +781,7 @@ namespace TCC.View.Movimentos
             try
             {
                 obra = new Obras();
-                obra.Cliente = clientesDAO.select(Convert.ToInt16(comboCliente.SelectedValue)).First();
+                obra.Cliente = clientesDAO.select(Convert.ToInt16(comboCliente.SelectedValue));
                 obra.Status = statusDAO.select().Where(x => x.Id == Convert.ToInt16(comboStatus.SelectedValue)).First();
                 obra.Endereco = textEndereco.Text.Trim();
                 obra.Cidade = cidadesDAO.selectPorEstado(Convert.ToInt16(comboUF.SelectedValue)).Where(x => x.Id == Convert.ToInt16(comboCidade.SelectedValue)).First();
@@ -952,30 +897,22 @@ namespace TCC.View.Movimentos
         #region Botões fechar e cancelar
         private void btCancelar_Click(object sender, EventArgs e)
         {
-            #region Botão cancelar [limparCampos()]
             limparCampos();
-            #endregion
         }
 
         private void btFechar_Click(object sender, EventArgs e)
         {
-            #region Botão fechar [limparCampos()]
             limparCampos();
-            #endregion
         }
 
         private void btFechar2_Click(object sender, EventArgs e)
         {
-            #region Botão fechar_2 [limparCampos()]
             limparCampos();
-            #endregion
         }
 
         private void btFechar3_Click(object sender, EventArgs e)
         {
-            #region Botão fechar_3 [limparCampos()]
             limparCampos();
-            #endregion
         }
 
         private void btFechar4_Click(object sender, EventArgs e)
@@ -1011,9 +948,7 @@ namespace TCC.View.Movimentos
 
         private void comboUF_SelectedIndexChanged(object sender, EventArgs e)
         {
-            #region Carregar cidades [carregarCidades()]
             carregarCidades();
-            #endregion
         }
 
         private void carregarCidades()
@@ -1158,7 +1093,7 @@ namespace TCC.View.Movimentos
                 }
                 if (!existe)
                 {
-                    addTrab = new AddTrab(id);
+                    AddTrab addTrab = new AddTrab(id);
                     addTrab.MdiParent = this.ParentForm;
                     addTrab.Show();
                 }
@@ -1178,7 +1113,7 @@ namespace TCC.View.Movimentos
                 }
                 if (!existe)
                 {
-                    addForn = new AddForn(id);
+                    AddForn addForn = new AddForn(id);
                     addForn.MdiParent = this.ParentForm;
                     addForn.Show();
                 }
@@ -1198,7 +1133,7 @@ namespace TCC.View.Movimentos
                 }
                 if (!existe)
                 {
-                    addAgendamento = new AddAgendamento(2, id);
+                    AddAgendamento addAgendamento = new AddAgendamento(2, id);
                     addAgendamento.MdiParent = this.ParentForm;
                     addAgendamento.Show();
                 }
@@ -1218,7 +1153,7 @@ namespace TCC.View.Movimentos
                 }
                 if (!existe)
                 {
-                    addFoto = new AddFoto(id);
+                    AddFoto addFoto = new AddFoto(id);
                     addFoto.MdiParent = this.ParentForm;
                     addFoto.Show();
                 }
@@ -1251,8 +1186,8 @@ namespace TCC.View.Movimentos
             #region Ao mudar o cliente selecionado, muda também a cidade e UF selecionados
             try
             {
-                cliente = clientesDAO.select(Convert.ToInt16(comboCliente.SelectedValue.ToString())).First();
-                cidade = cidadesDAO.select().Where(x => x.Id == cliente.Cidade.Id).First();
+                Clientes cliente = clientesDAO.select(Convert.ToInt16(comboCliente.SelectedValue.ToString()));
+                Cidades cidade = cidadesDAO.select().Where(x => x.Id == cliente.Cidade.Id).First();
                 comboUF.SelectedValue = cidade.Estado.Id;
                 comboCidade.SelectedValue = cidade.Id;
             }
@@ -1298,7 +1233,8 @@ namespace TCC.View.Movimentos
                 // GET:
                 try
                 {
-                    var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost/fotos/wsAndroid/updateFotos.php?id=" + foto.Id + "&desc=" + foto.Descricao);
+                    var httpWebRequest = (HttpWebRequest)WebRequest.Create
+                        ("http://localhost/fotos/wsAndroid/updateFotos.php?id=" + foto.Id + "&desc=" + foto.Descricao);
                     var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
 
                     using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
@@ -1317,7 +1253,8 @@ namespace TCC.View.Movimentos
         {
             if (listBoxFoto.SelectedIndex >= 0)
             {
-                resposta = MessageBox.Show("Excluir a foto selecionada?", "Atenção", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+                resposta = MessageBox.Show("Excluir a foto selecionada?", "Atenção", MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
 
                 if (resposta == DialogResult.Yes)
                 {
@@ -1326,7 +1263,8 @@ namespace TCC.View.Movimentos
                     // GET:
                     try
                     {
-                        var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost/fotos/wsAndroid/removeFotos.php?id=" + foto.Id);
+                        var httpWebRequest = (HttpWebRequest)WebRequest.Create
+                            ("http://localhost/fotos/wsAndroid/removeFotos.php?id=" + foto.Id);
                         var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
 
                         using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
@@ -1538,7 +1476,7 @@ namespace TCC.View.Movimentos
                     btSalvarResp.Enabled = true;
                     btExcluirResp.Enabled = true;
                     btSalvarResp.Text = "&Salvar";
-                    btSalvarResp.Image = MenuPrincipal.imageSalvar();
+                    btSalvarResp.Image = Variaveis.getSalvar();
                     tabControlDet.TabPages.Remove(tabPage5);
                     tabControlDet.TabPages.Remove(tabPage6);
                     tabControlDet.TabPages.Remove(tabPage7);
@@ -1556,7 +1494,7 @@ namespace TCC.View.Movimentos
                     btSalvarResp.Enabled = true;
                     btExcluirResp.Enabled = true;
                     btSalvarResp.Text = "&Alterar";
-                    btSalvarResp.Image = MenuPrincipal.imageAlterar();
+                    btSalvarResp.Image = Variaveis.getAlterar();
 
                     if (tabControlDet.TabCount < 4) 
                     {
@@ -1601,16 +1539,12 @@ namespace TCC.View.Movimentos
             groupBoxObras.Text = "Detalhes";
             #endregion
 
-            #region Carregar dados da obra no groupBox [carregarInfObra()]
             carregarInfObra();
-            #endregion
         }
 
         private void btSair_Click(object sender, EventArgs e)
         {
-            #region Botão sair
             this.Close();
-            #endregion
         }
     }
 }

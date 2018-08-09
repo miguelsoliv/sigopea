@@ -13,11 +13,15 @@ namespace TCC.Model.DAO
             db = new ModelDB();
         }
 
+        public void insert(Estados estadoInf)
+        {
+            db.Estados.Add(estadoInf);
+            db.SaveChanges();
+        }
+
         public IEnumerable<Estados> select()
         {
-            #region Lista de estados
             return db.Estados.ToList();
-            #endregion
         }
     }
 }

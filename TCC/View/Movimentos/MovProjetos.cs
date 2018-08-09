@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using TCC.Model;
 using TCC.Model.Classes;
 using TCC.Model.DAO;
 using TCC.View.Add;
@@ -26,18 +27,12 @@ namespace TCC.View.Movimentos
         private RegCauProjeto regCauProj;
         private RegCrea regCrea;
         private RegCreaProjeto regCreaProj;
-        private Clientes cliente;
-        private Cidades cidade;
         private Projetos projeto;
-        private Agendamentos agendamento;
-        private AddAgendamento addAgendamento;
-        private AddReg addReg;
         private DialogResult resposta;
         private IEnumerable<Projetos> listaProjetos;
-        private DataGridViewImageColumn img, img2;
         private bool existe;
         private string id;
-        private int idProjeto, verif;
+        private int idProjeto;
 
         public MovProjetos()
         {
@@ -58,7 +53,6 @@ namespace TCC.View.Movimentos
         private void MovProjetos_Load(object sender, EventArgs e)
         {
             #region Inicialização do dataGridView (criação das colunas)
-            // Adiciona as colunas a serem exibidas (conteúdo, título da coluna)
             dataGridView1.Columns.Add("Id", "Código");
             dataGridView1.Columns.Add("Cliente.Nome", "Cliente");
             dataGridView1.Columns.Add("Status.Nome", "Status");
@@ -67,21 +61,20 @@ namespace TCC.View.Movimentos
             dataGridView1.Columns.Add("Endereco", "Endereço");
             dataGridView1.Columns.Add("PrazoEstipulado", "Entrega");
 
-            img = new DataGridViewImageColumn();
-            img.Image = MenuPrincipal.imageAgend();
+            DataGridViewImageColumn img = new DataGridViewImageColumn();
+            img.Image = Variaveis.getAgend();
             dataGridView1.Columns.Add(img);
             img.HeaderText = "";
             img.Name = "img";
             img.ImageLayout = DataGridViewImageCellLayout.Zoom;
 
-            img2 = new DataGridViewImageColumn();
-            img2.Image = MenuPrincipal.imageReg();
+            DataGridViewImageColumn img2 = new DataGridViewImageColumn();
+            img2.Image = Variaveis.getReg();
             dataGridView1.Columns.Add(img2);
             img2.HeaderText = "";
             img2.Name = "img2";
             img2.ImageLayout = DataGridViewImageCellLayout.Zoom;
 
-            // Largura das colunas (o default é 100)
             dataGridView1.Columns["Id"].Width = 50;
             dataGridView1.Columns["Cliente.Nome"].Width = 200;
             dataGridView1.Columns["Estado.Sigla"].Width = 35;
@@ -103,7 +96,7 @@ namespace TCC.View.Movimentos
             }
             catch
             {
-                //MessageBox.Show(ex.Message);
+                
             }
             #endregion
 
@@ -116,13 +109,11 @@ namespace TCC.View.Movimentos
             }
             catch
             {
-                //MessageBox.Show(ex.Message);
+                
             }
             #endregion
 
-            #region Carregar cidades [carregarCidades()]
             carregarCidades();
-            #endregion
         }
 
         private void dataGridView1_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
@@ -143,10 +134,8 @@ namespace TCC.View.Movimentos
 
         private void MovProjetos_Activated(object sender, EventArgs e)
         {
-            #region Carregar projetos e clientes quando o form for focado
             carregarProjetos(0);
             carregarClientes();
-            #endregion
         }
 
         private void carregarProjetos(int tipo)
@@ -154,7 +143,6 @@ namespace TCC.View.Movimentos
             #region Carregar projetos no dataGridView
             try
             {
-                // limpa as linhas da grid
                 dataGridView1.Rows.Clear();
 
                 switch (tipo)
@@ -169,18 +157,15 @@ namespace TCC.View.Movimentos
                         break;
                 }
 
-                // preenche as colunas
                 foreach (Projetos p in listaProjetos)
                 {
-                    foreach (Cidades cid in cidadesDAO.selectCidade(p.Cidade.Id))
-                    {
-                        dataGridView1.Rows.Add(p.Id, p.Cliente.Nome, p.Status.Nome, cid.Estado.Sigla, p.Cidade.Nome, p.Endereco, p.PrazoEstipulado.ToString("dd/MM/yyyy"));
-                    }
+                    Cidades cid = cidadesDAO.selectCidade(p.Cidade.Id);
+                    dataGridView1.Rows.Add(p.Id, p.Cliente.Nome, p.Status.Nome, cid.Estado.Sigla, p.Cidade.Nome, p.Endereco, p.PrazoEstipulado.ToString("dd/MM/yyyy"));
                 }
             }
             catch
             {
-                //MessageBox.Show(ex.Message);
+                
             }
             #endregion
         }
@@ -196,7 +181,7 @@ namespace TCC.View.Movimentos
             }
             catch
             {
-                //MessageBox.Show(ex.Message);
+                
             }
             #endregion
         }
@@ -224,9 +209,7 @@ namespace TCC.View.Movimentos
                 groupBoxProjetos.Text = "Alteração de Projeto";
                 #endregion
 
-                #region Carregar dados do projeto no groupBox [carregarInfProjeto()]
                 carregarInfProjeto();
-                #endregion
             }
         }
 
@@ -247,7 +230,7 @@ namespace TCC.View.Movimentos
                 #region Botão alterar agendamento: alterar o assunto/observação do agendamento selecionado
                 try
                 {
-                    agendamento = new Agendamentos();
+                    Agendamentos agendamento = new Agendamentos();
                     agendamento.Id = Convert.ToInt16(listBoxAgend.Text);
                     agendamento.Assunto = textAssunto.Text.Trim();
                     agendamento.Observacao = textAgend.Text.Trim();
@@ -423,19 +406,13 @@ namespace TCC.View.Movimentos
                 switch (tabControlDet.SelectedIndex)
                 {
                     case 0:
-                        #region Carregar os dados do projeto [carregarInfProjeto()]
                         carregarInfProjeto();
-                        #endregion
                         break;
                     case 1:
-                        #region Carregar os registros do projeto selecionado [carregarInfReg(0)]
                         carregarInfReg(0);
-                        #endregion
                         break;
                     case 2:
-                        #region Carregar os agendamentos do projeto selecionado [carregarInfAgend(0)]
                         carregarInfAgend(0);
-                        #endregion
                         break;
                 }
             }
@@ -452,19 +429,13 @@ namespace TCC.View.Movimentos
                     switch (tabControlDet.SelectedIndex)
                     {
                         case 0:
-                            #region Carregar os dados do projeto [carregarInfProjetos()]
                             carregarInfProjeto();
-                            #endregion
                             break;
                         case 1:
-                            #region Carregar os registros do projeto selecionado [carregarInfReg(0)]
                             carregarInfReg(0);
-                            #endregion
                             break;
                         case 2:
-                            #region Carregar os agendamentos do projeto selecionado [carregarInfAgend(0)]
                             carregarInfAgend(0);
-                            #endregion
                             break;
                     }
                 }
@@ -473,16 +444,12 @@ namespace TCC.View.Movimentos
 
         private void listBoxData_SelectedIndexChanged(object sender, EventArgs e)
         {
-            #region Carregar agendamentos relacionados à data selecionada [carregarInfAgend(1)]
             carregarInfAgend(1);
-            #endregion
         }
 
         private void listBoxAgend_SelectedIndexChanged(object sender, EventArgs e)
         {
-            #region Carregar texto do agendamento selecionado [carregarInfAgend(2)]
             carregarInfAgend(2);
-            #endregion
         }
 
         private void carregarInfProjeto()
@@ -490,44 +457,35 @@ namespace TCC.View.Movimentos
             #region Carregar dados do projeto nos itens do groupBox
             try
             {
-                foreach (Projetos p in projetosDAO.select(Convert.ToInt16(dataGridView1.CurrentRow.Cells["ID"].Value.ToString())))
-                {
-                    
-                    comboCliente.Focus();
+                Projetos p = projetosDAO.select(Convert.ToInt16(dataGridView1.CurrentRow.Cells["ID"].Value.ToString()));
+                comboCliente.Focus();
 
-                    foreach (Cidades cid in cidadesDAO.selectCidade(p.Cidade.Id))
-                    {
-                        comboUF.SelectedValue = cid.Estado.Id;
-                    }
+                Cidades cid = cidadesDAO.selectCidade(p.Cidade.Id);
+                comboUF.SelectedValue = cid.Estado.Id;
 
-                    comboCliente.SelectedValue = p.Cliente.Id;
-                    comboStatus.SelectedValue = p.Status.Id;
-                    comboCidade.SelectedValue = p.Cidade.Id;
-                    textEndereco.Text = p.Endereco;
-                    textPreco.Text = ""+p.Preco;
-                    dateTimeInicio.Value = Convert.ToDateTime(p.DataInicio);
-                    dateTimeEntrega.Value = Convert.ToDateTime(p.PrazoEstipulado);
-                }
+                comboCliente.SelectedValue = p.Cliente.Id;
+                comboStatus.SelectedValue = p.Status.Id;
+                comboCidade.SelectedValue = p.Cidade.Id;
+                textEndereco.Text = p.Endereco;
+                textPreco.Text = "" + p.Preco;
+                dateTimeInicio.Value = Convert.ToDateTime(p.DataInicio);
+                dateTimeEntrega.Value = Convert.ToDateTime(p.PrazoEstipulado);
             }
             catch
             {
-                //MessageBox.Show(ex.Message);
+                
             }
             #endregion
         }
 
         private void btExcluir_Click(object sender, EventArgs e)
         {
-            #region Excluir projeto clicando no botão excluir [excluirProjeto()]
             excluirProjeto();
-            #endregion
         }
 
         private void btExcluirAgend_Click(object sender, EventArgs e)
         {
-            #region Botão excluir agendamento [excluirAgend()]
             excluirAgend();
-            #endregion
         }
 
         private void excluirAgend()
@@ -554,16 +512,6 @@ namespace TCC.View.Movimentos
             else
             {
                 MessageBox.Show("Selecione um agendamento.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-            #endregion
-        }
-
-        private void dataGridView1_KeyDown(object sender, KeyEventArgs e)
-        {
-            #region Excluir projeto [excluirProjeto()] ao pressionar a tecla delete, tendo uma linha selecionada
-            if (e.KeyCode == Keys.Delete && groupBoxProjetos.Visible == false)
-            {
-                excluirProjeto();
             }
             #endregion
         }
@@ -654,7 +602,7 @@ namespace TCC.View.Movimentos
         {
             #region Validação de campos
             limparErros();
-            verif = 0;
+            int verif = 0;
 
             if(comboCliente.SelectedIndex == -1)
             {
@@ -714,7 +662,7 @@ namespace TCC.View.Movimentos
             try
             {
                 projeto = new Projetos();
-                projeto.Cliente = clientesDAO.select(Convert.ToInt16(comboCliente.SelectedValue)).First();
+                projeto.Cliente = clientesDAO.select(Convert.ToInt16(comboCliente.SelectedValue));
                 projeto.Status = statusDAO.select().Where(x => x.Id == Convert.ToInt16(comboStatus.SelectedValue)).First();
                 projeto.Endereco = textEndereco.Text.Trim();
                 projeto.Cidade = cidadesDAO.selectPorEstado(Convert.ToInt16(comboUF.SelectedValue)).Where(x => x.Id == Convert.ToInt16(comboCidade.SelectedValue)).First();
@@ -796,9 +744,7 @@ namespace TCC.View.Movimentos
 
         private void btSalvar_Click(object sender, EventArgs e)
         {
-            #region Botão salvar [salvarProjeto()]
             salvarProjeto();
-            #endregion
         }
 
         private void salvarRegistro()
@@ -806,7 +752,7 @@ namespace TCC.View.Movimentos
             #region Validação de campos
             errorProvider.SetError(textRegistro, string.Empty);
             errorProvider.SetError(comboTipo, string.Empty);
-            verif = 0;
+            int verif = 0;
 
             if (listBoxCau.Items.Count + listBoxCrea.Items.Count == 2 && btSalvarRegistro.Text.Equals("&Salvar"))
             {
@@ -978,17 +924,13 @@ namespace TCC.View.Movimentos
 
         private void btSalvarRegistro_Click(object sender, EventArgs e)
         {
-            #region Botão salvar registro [salvarRegistro()]
             salvarRegistro();
-            #endregion
         }
 
         #region Botões fechar e cancelar
         private void btCancelar_Click(object sender, EventArgs e)
         {
-            #region Botão cancelar [limparCampos()]
             limparCampos();
-            #endregion
         }
 
         private void btFechar_Click(object sender, EventArgs e)
@@ -1012,17 +954,13 @@ namespace TCC.View.Movimentos
 
         private void btFechar2_Click(object sender, EventArgs e)
         {
-            #region Botão fechar_2 [limparCampos()]
             limparCampos();
-            #endregion
         }
         #endregion
 
         private void comboUF_SelectedIndexChanged(object sender, EventArgs e)
         {
-            #region Carregar cidades [carregarCidades()]
             carregarCidades();
-            #endregion
         }
 
         private void carregarCidades()
@@ -1052,7 +990,8 @@ namespace TCC.View.Movimentos
             {
                 if (listBoxCrea.Items.Count + listBoxCau.Items.Count == 2)
                 {
-                    resposta = MessageBox.Show("Excluir registro selecionado?", "Atenção", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+                    resposta = MessageBox.Show("Excluir registro selecionado?", "Atenção", MessageBoxButtons.YesNo,
+                        MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
 
                     if (resposta == DialogResult.Yes)
                     {
@@ -1096,7 +1035,8 @@ namespace TCC.View.Movimentos
                 }
                 else
                 {
-                    MessageBox.Show("Tenha ao menos um registro cadastrado para o projeto.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show("Tenha ao menos um registro cadastrado para o projeto.", "Aviso",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
                     listBoxCau.SelectedIndex = -1;
                     listBoxCrea.SelectedIndex = -1;
                 }
@@ -1252,7 +1192,7 @@ namespace TCC.View.Movimentos
                 }
                 if (!existe)
                 {
-                    addAgendamento = new AddAgendamento(1, id);
+                    AddAgendamento addAgendamento = new AddAgendamento(1, id);
                     addAgendamento.MdiParent = this.ParentForm;
                     addAgendamento.Show();
                 }
@@ -1283,7 +1223,7 @@ namespace TCC.View.Movimentos
                     }
                     if (!existe)
                     {
-                        addReg = new AddReg(id);
+                        AddReg addReg = new AddReg(id);
                         addReg.MdiParent = this.ParentForm;
                         addReg.Show();
                     }
@@ -1317,8 +1257,8 @@ namespace TCC.View.Movimentos
             #region Ao mudar o cliente selecionado, muda também a cidade e UF selecionados
             try
             {
-                cliente = clientesDAO.select(Convert.ToInt16(comboCliente.SelectedValue.ToString())).First();
-                cidade = cidadesDAO.select().Where(x => x.Id == cliente.Cidade.Id).First();
+                Clientes cliente = clientesDAO.select(Convert.ToInt16(comboCliente.SelectedValue.ToString()));
+                Cidades cidade = cidadesDAO.select().Where(x => x.Id == cliente.Cidade.Id).First();
                 comboUF.SelectedValue = cidade.Estado.Id;
                 comboCidade.SelectedValue = cidade.Id;
             }
@@ -1373,9 +1313,7 @@ namespace TCC.View.Movimentos
                 groupBoxProjetos.Text = "Detalhes";
                 #endregion
 
-                #region Carregar dados do projeto no groupBox [carregarInfProjeto()]
                 carregarInfProjeto();
-                #endregion
             }
         }
 
@@ -1401,7 +1339,7 @@ namespace TCC.View.Movimentos
                     if (btSalvarRegistro.Text.Equals("&Alterar"))
                     {
                         btSalvarRegistro.Text = "&Salvar";
-                        btSalvarRegistro.Image = MenuPrincipal.imageSalvar();
+                        btSalvarRegistro.Image = Variaveis.getSalvar();
                     }
                     #endregion
                     break;
@@ -1416,7 +1354,7 @@ namespace TCC.View.Movimentos
                     if (btSalvarRegistro.Text.Equals("&Salvar"))
                     {
                         btSalvarRegistro.Text = "&Alterar";
-                        btSalvarRegistro.Image = MenuPrincipal.imageAlterar();
+                        btSalvarRegistro.Image = Variaveis.getAlterar();
                     }
 
                     if (tabControlDet.TabCount < 3)
@@ -1436,7 +1374,7 @@ namespace TCC.View.Movimentos
                     if (btSalvarRegistro.Text.Equals("&Salvar"))
                     {
                         btSalvarRegistro.Text = "&Alterar";
-                        btSalvarRegistro.Image = MenuPrincipal.imageAlterar();
+                        btSalvarRegistro.Image = Variaveis.getAlterar();
                     }
                     
                     if (tabControlDet.TabCount < 3)
@@ -1472,9 +1410,7 @@ namespace TCC.View.Movimentos
 
         private void btSair_Click(object sender, EventArgs e)
         {
-            #region Botão sair
             this.Close();
-            #endregion
         }
     }
 }

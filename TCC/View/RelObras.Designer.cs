@@ -149,7 +149,7 @@
             this.MaximizeBox = false;
             this.Name = "RelObras";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Relatórios";
+            this.Text = "6";
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();

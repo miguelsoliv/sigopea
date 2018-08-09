@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LogsAdmin));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.panel = new System.Windows.Forms.Panel();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.maskedData = new System.Windows.Forms.MaskedTextBox();
@@ -120,6 +120,8 @@
             // 
             // comboFAcao
             // 
+            this.comboFAcao.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this.comboFAcao.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.comboFAcao.FormattingEnabled = true;
             this.comboFAcao.Location = new System.Drawing.Point(12, 19);
             this.comboFAcao.Name = "comboFAcao";
@@ -141,6 +143,8 @@
             // 
             // comboFUsuario
             // 
+            this.comboFUsuario.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this.comboFUsuario.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.comboFUsuario.FormattingEnabled = true;
             this.comboFUsuario.Location = new System.Drawing.Point(12, 19);
             this.comboFUsuario.Name = "comboFUsuario";
@@ -175,8 +179,8 @@
             this.dataGridView.Name = "dataGridView";
             this.dataGridView.ReadOnly = true;
             this.dataGridView.RowHeadersVisible = false;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(110)))), ((int)(((byte)(170)))), ((int)(((byte)(255)))));
-            this.dataGridView.RowsDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(110)))), ((int)(((byte)(170)))), ((int)(((byte)(255)))));
+            this.dataGridView.RowsDefaultCellStyle = dataGridViewCellStyle3;
             this.dataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridView.Size = new System.Drawing.Size(941, 488);
             this.dataGridView.TabIndex = 11;

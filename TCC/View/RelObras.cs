@@ -13,10 +13,6 @@ namespace TCC.View
         private ProjetosDAO projDAO { get; set; }
         private FotosDAO fotosDAO { get; set; }
         private AgendamentosDAO agendDAO { get; set; }
-        private Fotos foto;
-        private Obras obras;
-        private Projetos projetos;
-        private StreamWriter wr;
         private string path;
 
         public RelObras()
@@ -30,8 +26,56 @@ namespace TCC.View
             radioUltimaFoto.Checked = true;
         }
 
+        private void btGerar_Click(object sender, EventArgs e)
+        {
+            if (radioUltimaFoto.Checked)
+            {
+                gerarRel(1);
+                System.Diagnostics.Process.Start(path + "relFotos.html");
+            }
+            else if (radioAgendObra.Checked)
+            {
+                gerarRel(2);
+                System.Diagnostics.Process.Start(path + "relAgendObras.html");
+            }
+            else if (radioAgendProj.Checked)
+            {
+                gerarRel(3);
+                System.Diagnostics.Process.Start(path + "relAgendProj.html");
+            }
+        }
+
+        private void radioUltimaFoto_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radioUltimaFoto.Checked)
+            {
+                gerarRel(1);
+                webBrowser.Navigate(path + "relFotos.html");
+            }
+        }
+
+        private void radioAgendObra_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radioAgendObra.Checked)
+            {
+                gerarRel(2);
+                webBrowser.Navigate(path + "relAgendObras.html");
+            }
+        }
+
+        private void radioAgendProj_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radioAgendProj.Checked)
+            {
+                gerarRel(3);
+                webBrowser.Navigate(path + "relAgendProj.html");
+            }
+        }
+
         private void gerarRel(int tipo)
         {
+            StreamWriter wr;
+
             switch (tipo)
             {
                 case 1:
@@ -72,7 +116,7 @@ namespace TCC.View
 
                             try
                             {
-                                foto = fotosDAO.select().Where(x => x.Obra.Id == obra.Id).Last();
+                                Fotos foto = fotosDAO.select().Where(x => x.Obra.Id == obra.Id).Last();
                                 wr.WriteLine("<td>" + foto.Data.ToString("dd/MM/yyyy") + "</td>");
                                 wr.WriteLine("<td><img src='" + @"C:\xampp\htdocs\fotos\" + foto.Id + "." + foto.Tipo + "' width=100 height=80></td></tr>");
                             }
@@ -135,7 +179,7 @@ namespace TCC.View
 
                             try
                             {
-                                obras = obrasDAO.select().Where(x => x.Id == agend.Obra.Id).First();
+                                Obras obras = obrasDAO.select().Where(x => x.Id == agend.Obra.Id).First();
                                 wr.WriteLine("<td>" + obras.Cliente.Nome + "</td>");
                             }
                             catch
@@ -201,7 +245,7 @@ namespace TCC.View
 
                             try
                             {
-                                projetos = projDAO.select().Where(x => x.Id == agend.Projeto.Id).First();
+                                Projetos projetos = projDAO.select().Where(x => x.Id == agend.Projeto.Id).First();
                                 wr.WriteLine("<td>" + projetos.Cliente.Nome + "</td>");
                             }
                             catch
@@ -233,59 +277,9 @@ namespace TCC.View
             }
         }
 
-        private void btGerar_Click(object sender, EventArgs e)
-        {
-            if (radioUltimaFoto.Checked)
-            {
-                gerarRel(1);
-                System.Diagnostics.Process.Start(path + "relFotos.html");
-            }
-            else if (radioAgendObra.Checked)
-            {
-                gerarRel(2);
-                System.Diagnostics.Process.Start(path + "relAgendObras.html");
-            }
-            else if (radioAgendProj.Checked)
-            {
-                gerarRel(3);
-                System.Diagnostics.Process.Start(path + "relAgendProj.html");
-            }
-        }
-
-        #region Radio buttons
-        private void radioUltimaFoto_CheckedChanged(object sender, EventArgs e)
-        {
-            if (radioUltimaFoto.Checked)
-            {
-                gerarRel(1);
-                webBrowser.Navigate(path + "relFotos.html");
-            }
-        }
-
-        private void radioAgendObra_CheckedChanged(object sender, EventArgs e)
-        {
-            if (radioAgendObra.Checked)
-            {
-                gerarRel(2);
-                webBrowser.Navigate(path + "relAgendObras.html");
-            }
-        }
-
-        private void radioAgendProj_CheckedChanged(object sender, EventArgs e)
-        {
-            if (radioAgendProj.Checked)
-            {
-                gerarRel(3);
-                webBrowser.Navigate(path + "relAgendProj.html");
-            }
-        }
-        #endregion
-
         private void btSair_Click(object sender, EventArgs e)
         {
-            #region Botão Sair
             this.Close();
-            #endregion
         }
     }
 }

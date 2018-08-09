@@ -4,6 +4,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using TCC.Model;
 using TCC.Model.Classes;
 using TCC.Model.DAO;
 using TCC.View.Add;
@@ -51,14 +52,14 @@ namespace TCC.View.Pesquisas
 
             // Criação da coluna de imagens
             img = new DataGridViewImageColumn();
-            img.Image = MenuPrincipal.imageEmail();
+            img.Image = Variaveis.getEmail();
             dataGridView.Columns.Add(img);
             img.HeaderText = "";
             img.Name = "img";
             img.ImageLayout = DataGridViewImageCellLayout.Zoom;
 
             img2 = new DataGridViewImageColumn();
-            img2.Image = MenuPrincipal.imageObs();
+            img2.Image = Variaveis.getObs();
             dataGridView.Columns.Add(img2);
             img2.HeaderText = "";
             img2.Name = "img2";
@@ -91,7 +92,7 @@ namespace TCC.View.Pesquisas
             }
             catch
             {
-                //MessageBox.Show(ex.Message);
+                
             }
             #endregion
         }
@@ -114,30 +115,25 @@ namespace TCC.View.Pesquisas
 
         private void PesqClientes_Activated(object sender, EventArgs e)
         {
-            #region Carregar clientes [carregarClientes()]
             carregarClientes();
-            #endregion
         }
 
         private void carregarClientes()
         {
-            // limpa as linhas da grid
             dataGridView.Rows.Clear();
-            
+
+            // Check->false: caso tenha feito uma pesquisa, não reseta as linhas do dataGrid até
+            // que o usuário aperte no botão "Limpar" ou feche o form
             if (check == false)
             {
                 #region Carregar clientes no dataGridView
-                // Check->false: caso tenha feito uma pesquisa, não reseta as linhas do dataGrid até
-                // que o usuário aperte no botão "Limpar" ou feche o form
                 try
                 {
                     // preenche as colunas
                     foreach (Clientes c in clientesDAO.select())
                     {
-                        foreach (Cidades cid in cidadesDAO.selectCidade(c.Cidade.Id))
-                        {
-                            dataGridView.Rows.Add(c.Id, c.Nome, c.Email, cid.Estado.Sigla, c.Cidade.Nome, c.Endereco, c.Telefone);
-                        }
+                        Cidades cid = cidadesDAO.selectCidade(c.Cidade.Id);
+                        dataGridView.Rows.Add(c.Id, c.Nome, c.Email, cid.Estado.Sigla, c.Cidade.Nome, c.Endereco, c.Telefone);
                     }
                 }
                 catch
@@ -167,10 +163,8 @@ namespace TCC.View.Pesquisas
                     // preenche as colunas
                     foreach (Clientes c in listaClientes)
                     {
-                        foreach (Cidades cid in cidadesDAO.selectCidade(c.Cidade.Id))
-                        {
-                            dataGridView.Rows.Add(c.Id, c.Nome, c.Email, cid.Estado.Sigla, c.Cidade.Nome, c.Endereco, c.Telefone);
-                        }
+                        Cidades cid = cidadesDAO.selectCidade(c.Cidade.Id);
+                        dataGridView.Rows.Add(c.Id, c.Nome, c.Email, cid.Estado.Sigla, c.Cidade.Nome, c.Endereco, c.Telefone);
                     }
                 }
                 catch
@@ -207,37 +201,33 @@ namespace TCC.View.Pesquisas
             #region Carregar dados do cliente nos itens do groupBox
             try
             {
-                foreach (Clientes c in clientesDAO.select(Convert.ToInt16(dataGridView.CurrentRow.Cells["ID"].Value.ToString())))
+                Clientes c = clientesDAO.select(Convert.ToInt16(dataGridView.CurrentRow.Cells["ID"].Value.ToString()));
+                textNome.Text = c.Nome;
+                textNome.Focus();
+                textEmail.Text = c.Email;
+
+                if (c.Cpf == null)
                 {
-                    textNome.Text = c.Nome;
-                    textNome.Focus();
-                    textEmail.Text = c.Email;
-
-                    if (c.Cpf == null)
-                    {
-                        textDocumento.Text = c.Cnpj;
-                        label2.Text = "CNPJ";
-                    }
-                    else
-                    {
-                        textDocumento.Text = c.Cpf;
-                        label2.Text = "CPF";
-                    }
-
-                    foreach (Cidades cid in cidadesDAO.selectCidade(c.Cidade.Id))
-                    {
-                        textUF.Text = cid.Estado.Nome;
-                    }
-
-                    textCidade.Text = c.Cidade.Nome;
-                    textEndereco.Text = c.Endereco;
-                    textTel.Text = c.Telefone;
-                    textTel2.Text = c.Telefone2;
+                    textDocumento.Text = c.Cnpj;
+                    label2.Text = "CNPJ";
                 }
+                else
+                {
+                    textDocumento.Text = c.Cpf;
+                    label2.Text = "CPF";
+                }
+
+                Cidades cid = cidadesDAO.selectCidade(c.Cidade.Id);
+                textUF.Text = cid.Estado.Nome;
+
+                textCidade.Text = c.Cidade.Nome;
+                textEndereco.Text = c.Endereco;
+                textTel.Text = c.Telefone;
+                textTel2.Text = c.Telefone2;
             }
             catch
             {
-                //MessageBox.Show(ex.Message);
+                
             }
             #endregion
         }
@@ -315,14 +305,10 @@ namespace TCC.View.Pesquisas
             switch (tabControl.SelectedIndex)
             {
                 case 0:
-                    #region Carregar os dados do cliente [carregarInfCliente()]
                     carregarInfCliente();
-                    #endregion
                     break;
                 case 1:
-                    #region Carregar as observações do cliente selecionado [carregarInfObservacoes(0)]
                     carregarInfObservacoes(0);
-                    #endregion
                     break;
             }
         }
@@ -334,14 +320,10 @@ namespace TCC.View.Pesquisas
                 switch (tabControl.SelectedIndex)
                 {
                     case 0:
-                        #region Carregar os dados do cliente [carregarInfCliente()]
                         carregarInfCliente();
-                        #endregion
                         break;
                     case 1:
-                        #region Carregar as observações do cliente selecionado [carregarInfObservacoes(0)]
                         carregarInfObservacoes(0);
-                        #endregion
                         break;
                 }
             }
@@ -504,9 +486,7 @@ namespace TCC.View.Pesquisas
 
         private void btExcluir_Click(object sender, EventArgs e)
         {
-            #region Botão excluir [excluirObs()]
             excluirObs();
-            #endregion
         }
 
         private void btAlterar_Click(object sender, EventArgs e)
@@ -587,9 +567,7 @@ namespace TCC.View.Pesquisas
         }
         private void btSair_Click(object sender, EventArgs e)
         {
-            #region Botão sair
             this.Close();
-            #endregion
         }
     }
 }

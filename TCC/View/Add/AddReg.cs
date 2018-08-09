@@ -13,11 +13,6 @@ namespace TCC.View.Add
         private RegCreaDAO regCreaDAO { get; set; }
         private RegCauProjetoDAO regCauProjDAO { get; set; }
         private RegCreaProjetoDAO regCreaProjDAO { get; set; }
-        private RegCauProjeto regCauProj;
-        private RegCreaProjeto regCreaProj;
-        private RegCau regCau;
-        private RegCrea regCrea;
-        private int verif;
 
         public AddReg(string id)
         {
@@ -35,7 +30,7 @@ namespace TCC.View.Add
             #region Validação dos campos
             errorProvider.SetError(textRegistro, string.Empty);
             errorProvider.SetError(comboTipo, string.Empty);
-            verif = 0;
+            int verif = 0;
 
             if (textRegistro.Text.Trim().Length <= 6)
             {
@@ -57,8 +52,8 @@ namespace TCC.View.Add
 
             switch (comboTipo.SelectedIndex){
                 case 0:
-                    regCau = new RegCau();
-                    regCauProj = new RegCauProjeto();
+                    RegCau regCau = new RegCau();
+                    RegCauProjeto regCauProj = new RegCauProjeto();
                     regCau.Cau = textRegistro.Text.Trim();
                     regCauProj.Cau = regCau;
                     regCauDAO.insert(regCau);
@@ -66,8 +61,8 @@ namespace TCC.View.Add
                     regCauProjDAO.insert(regCauProj);
                     break;
                 case 1:
-                    regCrea = new RegCrea();
-                    regCreaProj = new RegCreaProjeto();
+                    RegCrea regCrea = new RegCrea();
+                    RegCreaProjeto regCreaProj = new RegCreaProjeto();
                     regCrea.Crea = textRegistro.Text.Trim();
                     regCreaProj.Crea = regCrea;
                     regCreaDAO.insert(regCrea);
@@ -81,9 +76,7 @@ namespace TCC.View.Add
 
         private void btCancelar_Click(object sender, EventArgs e)
         {
-            #region Botão cancelar
             this.Close();
-            #endregion
         }
     }
 }

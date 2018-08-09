@@ -13,11 +13,8 @@ namespace TCC.View.Add
     {
         private ObrasDAO obrasDAO { get; set; }
         private FotosDAO fotosDAO { get; set; }
-        private Obras obra;
         private Fotos fotos;
-        private ImageCodecInfo[] codecs;
-        private string path = @"C:\xampp\htdocs\fotos\", codecName;
-        private int verif;
+        private string path = @"C:\xampp\htdocs\fotos\";
 
         public AddFoto(string id)
         {
@@ -28,14 +25,15 @@ namespace TCC.View.Add
             fotosDAO = new FotosDAO();
 
             #region Criação do filtro do openFileDialog (só aceita arquivos do tipo imagem)
-            // Configure open file dialog box 
-            codecs = ImageCodecInfo.GetImageEncoders();
-            openFileDialog.Filter = String.Format("{0}{1}{2} ({3})|{3}", openFileDialog.Filter, "", "Arquivos de Imagem", "*.BMP;*.DIB;*.RLE;*.JPG;*.JPEG;*.JPE;*.JFIF;*.GIF;*.TIF;*.TIFF;*.PNG");
+            ImageCodecInfo[]  codecs = ImageCodecInfo.GetImageEncoders();
+            openFileDialog.Filter = String.Format("{0}{1}{2} ({3})|{3}", openFileDialog.Filter, "", 
+                "Arquivos de Imagem", "*.BMP;*.DIB;*.RLE;*.JPG;*.JPEG;*.JPE;*.JFIF;*.GIF;*.TIF;*.TIFF;*.PNG");
 
             foreach (var c in codecs)
             {
-                codecName = c.CodecName.Substring(8).Replace("Codec", "").Trim();
-                openFileDialog.Filter = String.Format("{0}{1}{2} ({3})|{3}", openFileDialog.Filter, "|", "Arquivos "+codecName, c.FilenameExtension);
+                string codecName = c.CodecName.Substring(8).Replace("Codec", "").Trim();
+                openFileDialog.Filter = String.Format("{0}{1}{2} ({3})|{3}", openFileDialog.Filter, "|", 
+                    "Arquivos "+codecName, c.FilenameExtension);
             }
 
             openFileDialog.FilterIndex = 1;
@@ -66,7 +64,7 @@ namespace TCC.View.Add
             errorProvider.SetError(label2, string.Empty);
             errorProvider.SetError(textDesc, string.Empty);
 
-            verif = 0;
+            int verif = 0;
 
             if (openFileDialog.FileName == "")
             {
@@ -92,13 +90,13 @@ namespace TCC.View.Add
                 fotos = new Fotos();
                 fotos.Descricao = textDesc.Text.Trim();
                 fotos.Data = DateTime.Today;
-                fotos.Obra = obrasDAO.select(Convert.ToInt16(textId.Text)).First();
+                fotos.Obra = obrasDAO.select(Convert.ToInt16(textId.Text));
                 fotos.Tipo = openFileDialog.FileName.Substring(openFileDialog.FileName.LastIndexOf('.') + 1);
                 fotosDAO.insert(fotos);
             }
             catch
             {
-                //MessageBox.Show(ex.Message);
+                
             }
             #endregion
 
@@ -114,8 +112,10 @@ namespace TCC.View.Add
             // GET:
             try
             {
-                obra = obrasDAO.select().Where(x => x.Id == fotos.Obra.Id).First();
-                var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost/fotos/wsAndroid/insertFotos.php?id=" + obra.Cliente.Id + "&tipo=" + fotos.Tipo + "&data=" + String.Format("{0:yyyy-MM-dd/}", fotos.Data) + "&desc=" + fotos.Descricao);
+                Obras obra = obrasDAO.select().Where(x => x.Id == fotos.Obra.Id).First();
+                var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost/fotos/wsAndroid/insertFotos.php?id="
+                    + obra.Cliente.Id + "&tipo=" + fotos.Tipo + "&data=" + String.Format("{0:yyyy-MM-dd/}", fotos.Data) +
+                    "&desc=" + fotos.Descricao);
                 var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
 
                 using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
@@ -131,9 +131,7 @@ namespace TCC.View.Add
 
         private void btCancelar_Click(object sender, EventArgs e)
         {
-            #region Botão cancelar
             this.Close();
-            #endregion
         }
     }
 }

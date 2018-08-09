@@ -13,11 +13,27 @@ namespace TCC.Model.DAO
             db = new ModelDB();
         }
 
+        public void insert(Acoes acaoInf)
+        {
+            db.Acoes.Add(acaoInf);
+            db.SaveChanges();
+        }
+
         public IEnumerable<Acoes> select()
         {
-            #region Lista de ações
             return db.Acoes.ToList();
-            #endregion
+        }
+
+        public Acoes select(int id)
+        {
+            try
+            {
+                return db.Acoes.Where(x => x.Id == id).First();
+            }
+            catch
+            {
+                return null;
+            }
         }
     }
 }

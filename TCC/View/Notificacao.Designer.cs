@@ -43,7 +43,6 @@
             this.label1.Size = new System.Drawing.Size(99, 13);
             this.label1.TabIndex = 0;
             this.label1.Text = "(Clique para fechar)";
-            this.label1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.label1_MouseClick);
             // 
             // panel
             // 
@@ -53,7 +52,6 @@
             this.panel.Name = "panel";
             this.panel.Size = new System.Drawing.Size(96, 83);
             this.panel.TabIndex = 3;
-            this.panel.MouseClick += new System.Windows.Forms.MouseEventHandler(this.panel_MouseClick);
             // 
             // label2
             // 
@@ -63,7 +61,6 @@
             this.label2.Size = new System.Drawing.Size(138, 26);
             this.label2.TabIndex = 1;
             this.label2.Text = "Você possui agendamentos\r\nmarcados para";
-            this.label2.MouseClick += new System.Windows.Forms.MouseEventHandler(this.label2_MouseClick);
             // 
             // Notificacao
             // 
@@ -79,7 +76,6 @@
             this.Name = "Notificacao";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Notificação";
-            this.MouseClick += new System.Windows.Forms.MouseEventHandler(this.Notificacao_MouseClick);
             this.ResumeLayout(false);
             this.PerformLayout();
 

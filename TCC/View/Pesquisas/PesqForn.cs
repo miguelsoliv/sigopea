@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using TCC.Model;
 using TCC.Model.Classes;
 using TCC.Model.DAO;
 using TCC.View.Add;
@@ -50,14 +51,14 @@ namespace TCC.View.Pesquisas
 
             // Criação da coluna de imagens
             img = new DataGridViewImageColumn();
-            img.Image = MenuPrincipal.imageEmail();
+            img.Image = Variaveis.getEmail();
             dataGridView.Columns.Add(img);
             img.HeaderText = "";
             img.Name = "img";
             img.ImageLayout = DataGridViewImageCellLayout.Zoom;
 
             img2 = new DataGridViewImageColumn();
-            img2.Image = MenuPrincipal.imageObs();
+            img2.Image = Variaveis.getObs();
             dataGridView.Columns.Add(img2);
             img2.HeaderText = "";
             img2.Name = "img2";
@@ -113,30 +114,25 @@ namespace TCC.View.Pesquisas
 
         private void PesqForn_Activated(object sender, EventArgs e)
         {
-            #region Carregar fornecedores [carregarFornecedores()]
             carregarFornecedores();
-            #endregion
         }
 
         private void carregarFornecedores()
         {
-            // limpa as linhas da grid
             dataGridView.Rows.Clear();
 
+            // Check->false: caso tenha feito uma pesquisa, não reseta as linhas do dataGrid até
+            // que o usuário aperte no botão "Limpar" ou feche o form
             if (check == false)
             {
                 #region Carregar fornecedores no dataGridView
-                // Check->false: caso tenha feito uma pesquisa, não reseta as linhas do dataGrid até
-                // que o usuário aperte no botão "Limpar" ou feche o form
                 try
                 {
                     // preenche as colunas
                     foreach (Fornecedores f in fornecedoresDAO.select())
                     {
-                        foreach (Cidades cid in cidadesDAO.selectCidade(f.Cidade.Id))
-                        {
-                            dataGridView.Rows.Add(f.Id, f.Nome, f.Email, cid.Estado.Sigla, f.Cidade.Nome, f.Endereco, f.Telefone);
-                        }
+                        Cidades cid = cidadesDAO.selectCidade(f.Cidade.Id);
+                        dataGridView.Rows.Add(f.Id, f.Nome, f.Email, cid.Estado.Sigla, f.Cidade.Nome, f.Endereco, f.Telefone);
                     }
                 }
                 catch
@@ -166,10 +162,8 @@ namespace TCC.View.Pesquisas
                     // preenche as colunas
                     foreach (Fornecedores f in listaForn)
                     {
-                        foreach (Cidades cid in cidadesDAO.selectCidade(f.Cidade.Id))
-                        {
-                            dataGridView.Rows.Add(f.Id, f.Nome, f.Email, cid.Estado.Sigla, f.Cidade.Nome, f.Endereco, f.Telefone);
-                        }
+                        Cidades cid = cidadesDAO.selectCidade(f.Cidade.Id);
+                        dataGridView.Rows.Add(f.Id, f.Nome, f.Email, cid.Estado.Sigla, f.Cidade.Nome, f.Endereco, f.Telefone);
                     }
                 }
                 catch
@@ -206,35 +200,31 @@ namespace TCC.View.Pesquisas
             #region Carregar dados do fornecedor nos itens do groupBox
             try
             {
-                foreach (Fornecedores f in fornecedoresDAO.select(Convert.ToInt16(dataGridView.CurrentRow.Cells["ID"].Value.ToString())))
+                Fornecedores f = fornecedoresDAO.select(Convert.ToInt16(dataGridView.CurrentRow.Cells["ID"].Value.ToString()));
+                textNome.Text = f.Nome;
+                textNome.Focus();
+                textEmail.Text = f.Email;
+
+                if (f.Cnpj.Length < 18)
                 {
-                    textNome.Text = f.Nome;
-                    textNome.Focus();
-                    textEmail.Text = f.Email;
-
-                    if (f.Cnpj.Length < 18)
-                    {
-                        textDocumento.Text = "";
-                    }
-                    else
-                    {
-                        textDocumento.Text = f.Cnpj;
-                    }
-
-                    foreach (Cidades cid in cidadesDAO.selectCidade(f.Cidade.Id))
-                    {
-                        textUF.Text = cid.Estado.Nome;
-                    }
-
-                    textCidade.Text = f.Cidade.Nome;
-                    textEndereco.Text = f.Endereco;
-                    textTel.Text = f.Telefone;
-                    textTel2.Text = f.Telefone2;
+                    textDocumento.Text = "";
                 }
+                else
+                {
+                    textDocumento.Text = f.Cnpj;
+                }
+
+                Cidades cid = cidadesDAO.selectCidade(f.Cidade.Id);
+                textUF.Text = cid.Estado.Nome;
+
+                textCidade.Text = f.Cidade.Nome;
+                textEndereco.Text = f.Endereco;
+                textTel.Text = f.Telefone;
+                textTel2.Text = f.Telefone2;
             }
             catch
             {
-                //MessageBox.Show(ex.Message);
+
             }
             #endregion
         }
@@ -311,14 +301,10 @@ namespace TCC.View.Pesquisas
             switch (tabControl.SelectedIndex)
             {
                 case 0:
-                    #region Carregar os fornecedores [carregarInfFornecedor()]
                     carregarInfFornecedor();
-                    #endregion
                     break;
                 case 1:
-                    #region Carregar as observações do fornecedor selecionado [carregarInfObservacoes(0)]
                     carregarInfObservacoes(0);
-                    #endregion
                     break;
             }
         }
@@ -330,14 +316,10 @@ namespace TCC.View.Pesquisas
                 switch (tabControl.SelectedIndex)
                 {
                     case 0:
-                        #region Carregar os fornecedores [carregarInfFornecedor()]
                         carregarInfFornecedor();
-                        #endregion
                         break;
                     case 1:
-                        #region Carregar as observações do fornecedor selecionado [carregarInfObservacoes(0)]
                         carregarInfObservacoes(0);
-                        #endregion
                         break;
                 }
             }
@@ -500,9 +482,7 @@ namespace TCC.View.Pesquisas
 
         private void btExcluir_Click(object sender, EventArgs e)
         {
-            #region Botão excluir [excluirObs()]
             excluirObs();
-            #endregion
         }
 
         private void btAlterar_Click(object sender, EventArgs e)
@@ -584,9 +564,7 @@ namespace TCC.View.Pesquisas
 
         private void btSair_Click(object sender, EventArgs e)
         {
-            #region Botão sair
             this.Close();
-            #endregion
         }
     }
 }

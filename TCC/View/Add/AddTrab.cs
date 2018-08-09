@@ -12,10 +12,6 @@ namespace TCC.View.Add
         private ObrasDAO obrasDAO { get; set; }
         private ObrasTrabalhadoresDAO otDAO { get; set; }
         private TrabalhadoresDAO trabalhadoresDAO { get; set; }
-        private Obras obra;
-        private Trabalhadores trab;
-        private ObrasTrabalhadores ot;
-        private bool verif;
 
         public AddTrab(string id)
         {
@@ -35,7 +31,6 @@ namespace TCC.View.Add
             checkboxColumn.Width = 20;
             dataGridTrab.Columns.Add(checkboxColumn);
 
-            // Largura das colunas (o default é 100)
             dataGridTrab.Columns["Id"].Width = 45;
             dataGridTrab.Columns["Servico"].Width = 80;
             dataGridTrab.Columns["Trabalhador.Nome"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
@@ -48,7 +43,6 @@ namespace TCC.View.Add
         {
             try
             {
-                // limpa as linhas da grid
                 dataGridTrab.Rows.Clear();
 
                 IEnumerable<ObrasTrabalhadores> listaOT = otDAO.select().Where(x => x.Obra.Id == Convert.ToInt16(textId.Text));
@@ -64,7 +58,7 @@ namespace TCC.View.Add
                 {
                     foreach (Trabalhadores trab in trabalhadoresDAO.select())
                     {
-                        verif = true;
+                        bool verif = true;
 
                         foreach (ObrasTrabalhadores obrasTrab in listaOT)
                         {
@@ -94,11 +88,11 @@ namespace TCC.View.Add
             {
                 if (Convert.ToBoolean(row.Cells[3].Value))
                 {
-                    obra = new Obras();
+                    Obras obra = new Obras();
                     obra = obrasDAO.select().Where(x => x.Id == Convert.ToInt16(textId.Text)).First();
-                    trab = new Trabalhadores();
+                    Trabalhadores trab = new Trabalhadores();
                     trab = trabalhadoresDAO.select().Where(x => x.Id == Convert.ToInt16(row.Cells[0].Value)).First();
-                    ot = new ObrasTrabalhadores();
+                    ObrasTrabalhadores ot = new ObrasTrabalhadores();
                     ot.Obra = obra;
                     ot.Trabalhador = trab;
                     otDAO.insert(ot);
@@ -110,9 +104,7 @@ namespace TCC.View.Add
 
         private void btCancelar_Click(object sender, EventArgs e)
         {
-            #region Botão cancelar
             this.Close();
-            #endregion
         }
     }
 }

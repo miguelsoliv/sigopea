@@ -10,11 +10,9 @@ namespace TCC.View
 {
     public partial class Backup : Form
     {
-        private AcoesDAO acoesDAO { get; set; }
         private AgendamentosDAO agendDAO { get; set; }
         private CidadesDAO cidadesDAO { get; set; }
         private ClientesDAO clientesDAO { get; set; }
-        private EstadosDAO estadosDAO { get; set; }
         private FornecedoresDAO fornDAO { get; set; }
         private FotosDAO fotosDAO { get; set; }
         private LogsDAO logsDAO { get; set; }
@@ -29,7 +27,6 @@ namespace TCC.View
         private RegCreaDAO regCreaDAO { get; set; }
         private RegCreaProjetoDAO regCreaPDAO { get; set; }
         private ResponsavelDAO respDAO { get; set; }
-        private StatusDAO statusDAO { get; set; }
         private TrabalhadoresDAO trabDAO { get; set; }
         private UsuariosDAO usuariosDAO { get; set; }
         private StringBuilder inserts;
@@ -37,11 +34,9 @@ namespace TCC.View
         public Backup()
         {
             InitializeComponent();
-            acoesDAO = new AcoesDAO();
             agendDAO = new AgendamentosDAO();
             cidadesDAO = new CidadesDAO();
             clientesDAO = new ClientesDAO();
-            estadosDAO = new EstadosDAO();
             fornDAO = new FornecedoresDAO();
             fotosDAO = new FotosDAO();
             logsDAO = new LogsDAO();
@@ -56,7 +51,6 @@ namespace TCC.View
             regCreaDAO = new RegCreaDAO();
             regCreaPDAO = new RegCreaProjetoDAO();
             respDAO = new ResponsavelDAO();
-            statusDAO = new StatusDAO();
             trabDAO = new TrabalhadoresDAO();
             usuariosDAO = new UsuariosDAO();
             inserts = new StringBuilder();
@@ -361,20 +355,9 @@ namespace TCC.View
                 #endregion
 
                 #region Inserts
-                if (estadosDAO.select().Count() > 0)
-                {
-                    sw.WriteLine("INSERT INTO Estados(Nome, Sigla) VALUES");
-                    foreach (Estados estados in estadosDAO.select())
-                    {
-                        inserts.Append("('" + estados.Nome + "', '" + estados.Sigla + "'),\n");
-                    }
-
-                    arrumarBuilder(sw);
-                }
-
                 if (cidadesDAO.select().Count() > 0)
                 {
-                    int limite = 0; // SQL só insere 1000 linhas por ver
+                    int limite = 0; // SQL só insere 1000 linhas por vez
                     sw.WriteLine("INSERT INTO Cidades(Nome, Estado_Id) VALUES");
                     foreach (Cidades cidades in cidadesDAO.select())
                     {
@@ -390,28 +373,6 @@ namespace TCC.View
                             inserts.Append("('" + cidades.Nome + "', " + cidades.Estado.Id + "),\n");
                             limite++;
                         }
-                    }
-
-                    arrumarBuilder(sw);
-                }
-
-                if (statusDAO.select().Count() > 0)
-                {
-                    sw.WriteLine("INSERT INTO Status(Nome) VALUES");
-                    foreach (Status status in statusDAO.select())
-                    {
-                        inserts.Append("('" + status.Nome + "'),\n");
-                    }
-
-                    arrumarBuilder(sw);
-                }
-
-                if (acoesDAO.select().Count() > 0)
-                {
-                    sw.WriteLine("INSERT INTO Acoes(Descricao) VALUES");
-                    foreach (Acoes acoes in acoesDAO.select())
-                    {
-                        inserts.Append("('" + acoes.Descricao + "'),\n");
                     }
 
                     arrumarBuilder(sw);
@@ -936,6 +897,24 @@ namespace TCC.View
             MessageBox.Show("Arquivo gerado com sucesso.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
+        private void btGerar_Click(object sender, EventArgs e)
+        {
+            // Abrir saveFileDialog para o usuário selecionar onde salvar o arquivo de backup
+            // Nome padrão
+            saveFileDialog.FileName = "backupSIGOPEA_" + DateTime.Now.ToString("dd_MM_yyyy");
+            // Adicionar filtros - também pode ser feito nas propriedades
+            saveFileDialog.Filter = "Arquivos SQL (*.sql)|*.sql";
+
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                label1.Visible = true;
+                pictureBox.Visible = true;
+                btGerar.Enabled = false;
+
+                backgroundWorker1.RunWorkerAsync();
+            }
+        }
+
         private void arrumarBuilder(StreamWriter sw)
         {
             try
@@ -952,37 +931,9 @@ namespace TCC.View
             }
         }
 
-        private void btGerar_Click(object sender, EventArgs e)
-        {
-            #region Abrir saveFileDialog para o usuário selecionar onde salvar o arquivo de backup
-            try
-            {
-                // set a default file name
-                saveFileDialog.FileName = "backupSIGOPEA_"+DateTime.Now.ToString("dd_MM_yyyy");
-                // set filters - this can be done in properties as well
-                saveFileDialog.Filter = "Arquivos SQL (*.sql)|*.sql";
-
-                if (saveFileDialog.ShowDialog() == DialogResult.OK)
-                {
-                    label1.Visible = true;
-                    pictureBox.Visible = true;
-                    btGerar.Enabled = false;
-
-                    backgroundWorker1.RunWorkerAsync();
-                }
-            }
-            catch
-            {
-
-            }
-            #endregion
-        }
-
         private void btCancelar_Click(object sender, EventArgs e)
         {
-            #region Botão cancelar
             this.Close();
-            #endregion
         }
     }
 }

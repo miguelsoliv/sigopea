@@ -8,7 +8,6 @@ namespace TCC.View.Add
 {
     public partial class AddAgendamento : Form
     {
-        private Agendamentos agend;
         private AgendamentosDAO agendDAO { get; set; }
         private ProjetosDAO projetosDAO { get; set; }
         private ObrasDAO obrasDAO { get; set; }
@@ -42,9 +41,7 @@ namespace TCC.View.Add
             switch (e.KeyCode)
             {
                 case Keys.Enter:
-                    #region Salvar agendamento ao apertar a tecla "enter" [salvarAgend()]
                     salvarAgend();
-                    #endregion
                     break;
             }
         }
@@ -65,7 +62,7 @@ namespace TCC.View.Add
             #region Colocar os dados do agendamento em um objeto
             try
             {
-                agend = new Agendamentos();
+                Agendamentos agend = new Agendamentos();
                 agend.Assunto = textAssunto.Text.Trim();
                 agend.Observacao = textObservacao.Text.Trim();
                 agend.Data = Convert.ToDateTime(dateTimePicker.Value.ToShortDateString());
@@ -95,16 +92,12 @@ namespace TCC.View.Add
 
         private void btAdicionar_Click(object sender, EventArgs e)
         {
-            #region Salvar agendamento ao apertar o botão de adicionar [salvarAgend()]
             salvarAgend();
-            #endregion
         }
 
         private void btCancelar_Click(object sender, EventArgs e)
         {
-            #region Botão cancelar
             this.Close();
-            #endregion
         }
     }
 }

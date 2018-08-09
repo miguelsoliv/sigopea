@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
-using System.IO;
-using System.Linq;
 using System.Windows.Forms;
 using TCC.Model;
 using TCC.Model.Classes;
@@ -23,32 +19,12 @@ namespace TCC.View
         private FotosDAO fotosDAO { get; set; }
         private LogsDAO logsDAO { get; set; }
         private UsuariosDAO usuariosDAO { get; set; }
-        private Usuarios usuario;
-        private Logs log;
-        private ListClientes listClientes;
-        private ListForn listForn;
-        private ListTrab listTrab;
-        private PesqClientes pesqClientes;
-        private PesqTrab pesqTrab;
-        private PesqForn pesqForn;
-        private MovObras movObras;
-        private MovProjetos movProjetos;
-        private EnvioDeEmail envioDeEmail;
-        private Backup backup;
-        private RelObras relObras;
-        private GrafObras grafObras;
         private Notificacao not;
-        private LogsAdmin logs;
-        private PalavrasProibidasAdmin palavrasP;
-        private DateTime data;
-        private IEnumerable<Logs> listaLogs;
-        private static Image emailIm, obsIm, agendIm, fotoIm, trabIm, fornIm, salvarIm, alterarIm, regIm,
-        senhaImC = Image.FromFile(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName + @"\images\passwd_20x20.png"),
-        senhaImP = Image.FromFile(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName + @"\images\passwd_2_20x20.png");
+        private string login;
         private bool existe;
-        private int dias = -1;
+        private int tipoUsuario, dias = -1;
 
-        public MenuPrincipal()
+        public MenuPrincipal(string login, int tipoUsuario)
         {
             InitializeComponent();
             acoesDAO = new AcoesDAO();
@@ -58,122 +34,46 @@ namespace TCC.View
             logsDAO = new LogsDAO();
             usuariosDAO = new UsuariosDAO();
 
+            this.login = login;
+            this.tipoUsuario = tipoUsuario;
+
             // Tirar borda 3D
             this.SetBevel(false);
         }
-
-        #region Get de imagens (static)
-        public static Image imageEmail()
-        {
-            return emailIm;
-        }
-
-        public static Image imageObs()
-        {
-            return obsIm;
-        }
-
-        public static Image imageAgend()
-        {
-            return agendIm;
-        }
-
-        public static Image imageFoto()
-        {
-            return fotoIm;
-        }
-
-        public static Image imageTrab()
-        {
-            return trabIm;
-        }
-
-        public static Image imageForn()
-        {
-            return fornIm;
-        }
-
-        public static Image imageSenhaCinza()
-        {
-            return senhaImC;
-        }
-
-        public static Image imageSenhaPreta()
-        {
-            return senhaImP;
-        }
-
-        public static Image imageSalvar()
-        {
-            return salvarIm;
-        }
-
-        public static Image imageAlterar()
-        {
-            return alterarIm;
-        }
-
-        public static Image imageReg()
-        {
-            return regIm;
-        }
-        #endregion
 
         private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
             foreach (Agendamentos agend in agendDAO.select())
             {
-                data = agend.Data;
+                DateTime data = agend.Data;
                 if (data.Subtract(DateTime.Today).Days <= 3 && data.Subtract(DateTime.Today).Days >= 0)
                 {
                     dias = DateTime.Today.Subtract(data).Days;
                     break;
                 }
             }
-            
-            emailIm = Image.FromFile(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName + @"\images\email_32x32.png");
-            obsIm = Image.FromFile(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName + @"\images\note_48x48.png");
-            agendIm = Image.FromFile(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName + @"\images\appointment_32x32.png");
-            fotoIm = Image.FromFile(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName + @"\images\camera_48x48.png");
-            trabIm = Image.FromFile(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName + @"\images\worker_24x24.png");
-            fornIm = Image.FromFile(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName + @"\images\provider_24x24.png");
-            salvarIm = Image.FromFile(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName + @"\images\save_24x24.png");
-            alterarIm = Image.FromFile(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName + @"\images\edit_24x24.png");
-            regIm = Image.FromFile(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName + @"\images\reg_32x32.png");
 
-            #region Verificar se o usuário já se logou no sistema alguma vez
-            listaLogs = logsDAO.select().Where(x => x.Usuario.Id == FormLogin.getIdUsuario());
+            // Verificar se o usuário já se logou no sistema alguma vez
+            Logs log = logsDAO.usuarioJaLogou();
 
-            if (listaLogs.Count() >= 1)
+            if (log != null)
             {
-                log = listaLogs.Last();
                 statusLabel.Text = "Último Login: " + log.Data + " - " + log.Hora;
             }
             else
             {
-                usuario = usuariosDAO.select().Where(x => x.Id == FormLogin.getIdUsuario()).First();
-
-                statusLabel.Text = "Bem-vindo(a) " + usuario.Login + "!";
+                statusLabel.Text = "Bem-vindo(a) " + login + "!";
             }
-            #endregion
 
-            #region Inserção de log de entrada de usuário
-            try
-            {
-                log = new Logs();
-                log.Acao = acoesDAO.select().Where(x => x.Id == 1).First();
-                log.Data = DateTime.Today.ToString("dd/MM/yyyy");
-                log.Hora = DateTime.Now.ToString("HH:mm");
-                log.Usuario = usuariosDAO.select().Where(x => x.Id == FormLogin.getIdUsuario()).First();
-                logsDAO.insert(log);
-            }
-            catch
-            {
+            // Inserção de log de entrada de usuário
+            log = new Logs();
+            log.Acao = acoesDAO.select(1);
+            log.Data = DateTime.Today.ToString("dd/MM/yyyy");
+            log.Hora = DateTime.Now.ToString("HH:mm");
+            log.Usuario = usuariosDAO.select(Variaveis.getIdUsuario());
+            logsDAO.insert(log);
 
-            }
-            #endregion
-
-            System.Threading.Thread.Sleep(1500);
+            System.Threading.Thread.Sleep(1000);
         }
 
         private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -187,8 +87,8 @@ namespace TCC.View
                 }
             }
 
-            #region Deixar itens de menu "Logs" e "Palavras Proibidas" visíveis somente para o admin
-            if (FormLogin.getTipoUsuario() == 1)
+            // Deixar itens de menu "Logs" e "Palavras Proibidas" visíveis somente para o admin
+            if (tipoUsuario == 1)
             {
                 logsToolStripMenuItem.Available = true;
                 palavrasProibidasToolStripMenuItem.Available = true;
@@ -198,7 +98,6 @@ namespace TCC.View
                 logsToolStripMenuItem.Available = false;
                 palavrasProibidasToolStripMenuItem.Available = false;
             }
-            #endregion
 
             this.Opacity = 100;
             this.ShowInTaskbar = true;
@@ -236,7 +135,7 @@ namespace TCC.View
             }
             if (!existe)
             {
-                listClientes = new ListClientes();
+                ListClientes listClientes = new ListClientes();
                 listClientes.MdiParent = this;
                 listClientes.Show();
             }
@@ -257,7 +156,7 @@ namespace TCC.View
             }
             if (!existe)
             {
-                listTrab = new ListTrab();
+                ListTrab listTrab = new ListTrab();
                 listTrab.MdiParent = this;
                 listTrab.Show();
             }
@@ -278,7 +177,7 @@ namespace TCC.View
             }
             if (!existe)
             {
-                listForn = new ListForn();
+                ListForn listForn = new ListForn();
                 listForn.MdiParent = this;
                 listForn.Show();
             }
@@ -299,7 +198,7 @@ namespace TCC.View
             }
             if (!existe)
             {
-                pesqClientes = new PesqClientes();
+                PesqClientes pesqClientes = new PesqClientes();
                 pesqClientes.MdiParent = this;
                 pesqClientes.Show();
             }
@@ -320,7 +219,7 @@ namespace TCC.View
             }
             if (!existe)
             {
-                pesqTrab = new PesqTrab();
+                PesqTrab pesqTrab = new PesqTrab();
                 pesqTrab.MdiParent = this;
                 pesqTrab.Show();
             }
@@ -341,7 +240,7 @@ namespace TCC.View
             }
             if (!existe)
             {
-                pesqForn = new PesqForn();
+                PesqForn pesqForn = new PesqForn();
                 pesqForn.MdiParent = this;
                 pesqForn.Show();
             }
@@ -362,7 +261,7 @@ namespace TCC.View
             }
             if (!existe)
             {
-                movObras = new MovObras();
+                MovObras movObras = new MovObras();
                 movObras.MdiParent = this;
                 movObras.Show();
             }
@@ -383,7 +282,7 @@ namespace TCC.View
             }
             if (!existe)
             {
-                movProjetos = new MovProjetos();
+                MovProjetos movProjetos = new MovProjetos();
                 movProjetos.MdiParent = this;
                 movProjetos.Show();
             }
@@ -404,7 +303,7 @@ namespace TCC.View
             }
             if (!existe)
             {
-                envioDeEmail = new EnvioDeEmail("");
+                EnvioDeEmail envioDeEmail = new EnvioDeEmail("");
                 envioDeEmail.MdiParent = this;
                 envioDeEmail.Show();
             }
@@ -425,7 +324,7 @@ namespace TCC.View
             }
             if (!existe)
             {
-                backup = new Backup();
+                Backup backup = new Backup();
                 backup.MdiParent = this;
                 backup.Show();
             }
@@ -446,7 +345,7 @@ namespace TCC.View
             }
             if (!existe)
             {
-                relObras = new RelObras();
+                RelObras relObras = new RelObras();
                 relObras.MdiParent = this;
                 relObras.Show();
             }
@@ -467,7 +366,7 @@ namespace TCC.View
             }
             if (!existe)
             {
-                grafObras = new GrafObras();
+                GrafObras grafObras = new GrafObras();
                 grafObras.MdiParent = this;
                 grafObras.Show();
             }
@@ -488,7 +387,7 @@ namespace TCC.View
             }
             if (!existe)
             {
-                logs = new LogsAdmin();
+                LogsAdmin logs = new LogsAdmin();
                 logs.MdiParent = this;
                 logs.Show();
             }
@@ -509,7 +408,7 @@ namespace TCC.View
             }
             if (!existe)
             {
-                palavrasP = new PalavrasProibidasAdmin();
+                PalavrasProibidasAdmin palavrasP = new PalavrasProibidasAdmin();
                 palavrasP.MdiParent = this;
                 palavrasP.Show();
             }
@@ -518,7 +417,7 @@ namespace TCC.View
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            #region Fazer form de notificação subir
+            // Fazer form de notificação subir
             if(not.Top <= 98)
             {
                 timer2.Start();
@@ -528,19 +427,17 @@ namespace TCC.View
             {
                 not.Top -= 10;
             }
-            #endregion
         }
 
         private void timer2_Tick(object sender, EventArgs e)
         {
-            #region Deixar form de notificação x segundos parado e depois startar o timer3 para fazê-lo descer
+            // Deixar form de notificação x segundos parado e depois startar o timer3 para fazê-lo descer
             timer3.Start();
-            #endregion
         }
 
         private void timer3_Tick(object sender, EventArgs e)
         {
-            #region Fazer form de notificação descer
+            // Fazer form de notificação descer
             if (not.Top >= 358)
             {
                 panel1.Visible = false;
@@ -550,33 +447,23 @@ namespace TCC.View
             {
                 not.Top += 10;
             }
-            #endregion
         }
 
         private void panel2_ControlRemoved(object sender, ControlEventArgs e)
         {
-            #region Mudar visibilidade do painel quando o form de notificação for fechado
+            // Mudar visibilidade do painel quando o form de notificação for fechado
             panel1.Visible = false;
-            #endregion
         }
 
         private void MenuPrincipal_FormClosing(object sender, FormClosingEventArgs e)
         {
-            #region Inserção de log de saída de usuário
-            try
-            {
-                log = new Logs();
-                log.Acao = acoesDAO.select().Where(x => x.Id == 2).First();
-                log.Data = DateTime.Today.ToString("dd/MM/yyyy");
-                log.Hora = DateTime.Now.ToString("HH:mm");
-                log.Usuario = usuariosDAO.select().Where(x => x.Id == FormLogin.getIdUsuario()).First();
-                logsDAO.insert(log);
-            }
-            catch
-            {
-
-            }
-            #endregion
+            // Inserção de log de saída de usuário
+            Logs log = new Logs();
+            log.Acao = acoesDAO.select(2);
+            log.Data = DateTime.Today.ToString("dd/MM/yyyy");
+            log.Hora = DateTime.Now.ToString("HH:mm");
+            log.Usuario = usuariosDAO.select(Variaveis.getIdUsuario());
+            logsDAO.insert(log);
         }
     }
 }

@@ -8,7 +8,6 @@ namespace TCC.View.Add
 {
     public partial class AddObservacao : Form
     {
-        private Observacoes obs;
         private ObservacoesDAO obsDAO { get; set; }
         private ClientesDAO clientesDAO { get; set; }
         private TrabalhadoresDAO trabalhadoresDAO { get; set; }
@@ -57,7 +56,7 @@ namespace TCC.View.Add
             #region Colocar os dados da observação em um objeto
             try
             {
-                obs = new Observacoes();
+                Observacoes obs = new Observacoes();
                 obs.Observacao = textObservacao.Text.Trim();
                 obs.Data = Convert.ToDateTime(dateTimePicker.Value.ToShortDateString());
 
@@ -89,9 +88,7 @@ namespace TCC.View.Add
 
         private void btCancelar_Click(object sender, EventArgs e)
         {
-            #region Botão cancelar
             this.Close();
-            #endregion
         }
     }
 }

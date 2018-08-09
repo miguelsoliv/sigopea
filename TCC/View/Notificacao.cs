@@ -4,9 +4,16 @@ namespace TCC.View
 {
     public partial class Notificacao : Form
     {
+        private const int WM_NCLBUTTONDWN = 0xA1;
+
         public Notificacao(int dias)
         {
             InitializeComponent();
+
+            this.MouseClick += new MouseEventHandler(fecharNotificacao);
+            label1.MouseClick += new MouseEventHandler(fecharNotificacao);
+            label2.MouseClick += new MouseEventHandler(fecharNotificacao);
+            panel.MouseClick += new MouseEventHandler(fecharNotificacao);
 
             switch (dias)
             {
@@ -25,8 +32,6 @@ namespace TCC.View
             }
         }
 
-        const int WM_NCLBUTTONDWN = 0xA1;
-
         protected override void WndProc(ref Message m)
         {
             // Ao clicar na borda do form
@@ -38,22 +43,7 @@ namespace TCC.View
             base.WndProc(ref m);
         }
 
-        private void Notificacao_MouseClick(object sender, MouseEventArgs e)
-        {
-            this.Close();
-        }
-
-        private void label1_MouseClick(object sender, MouseEventArgs e)
-        {
-            this.Close();
-        }
-
-        private void label2_MouseClick(object sender, MouseEventArgs e)
-        {
-            this.Close();
-        }
-
-        private void panel_MouseClick(object sender, MouseEventArgs e)
+        private void fecharNotificacao(object sender, MouseEventArgs e)
         {
             this.Close();
         }

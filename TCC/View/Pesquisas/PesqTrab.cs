@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using TCC.Model;
 using TCC.Model.Classes;
 using TCC.Model.DAO;
 using TCC.View.Add;
@@ -50,20 +51,19 @@ namespace TCC.View.Pesquisas
 
             // Criação da coluna de imagens
             img = new DataGridViewImageColumn();
-            img.Image = MenuPrincipal.imageEmail();
+            img.Image = Variaveis.getEmail();
             dataGridView.Columns.Add(img);
             img.HeaderText = "";
             img.Name = "img";
             img.ImageLayout = DataGridViewImageCellLayout.Zoom;
 
             img2 = new DataGridViewImageColumn();
-            img2.Image = MenuPrincipal.imageObs();
+            img2.Image = Variaveis.getObs();
             dataGridView.Columns.Add(img2);
             img2.HeaderText = "";
             img2.Name = "img2";
             img2.ImageLayout = DataGridViewImageCellLayout.Zoom;
 
-            // Largura das colunas (o default é 100)
             dataGridView.Columns["Id"].Width = 50;
             dataGridView.Columns["Nome"].Width = 200;
             dataGridView.Columns["Estado.Sigla"].Width = 35;
@@ -131,30 +131,25 @@ namespace TCC.View.Pesquisas
 
         private void PesqTrab_Activated(object sender, EventArgs e)
         {
-            #region Carregar trabalhadores [carregarTrabalhadores()]
             carregarTrabalhadores();
-            #endregion
         }
 
         private void carregarTrabalhadores()
         {
-            // limpa as linhas da grid
             dataGridView.Rows.Clear();
 
+            // Check->false: caso tenha feito uma pesquisa, não reseta as linhas do dataGrid até
+            // que o usuário aperte no botão "Limpar" ou feche o form
             if (check == false)
             {
                 #region Carregar trabalhadores no dataGridView
-                // Check->false: caso tenha feito uma pesquisa, não reseta as linhas do dataGrid até
-                // que o usuário aperte no botão "Limpar" ou feche o form
                 try
                 {
                     // preenche as colunas
                     foreach (Trabalhadores t in trabalhadoresDAO.select())
                     {
-                        foreach (Cidades cid in cidadesDAO.selectCidade(t.Cidade.Id))
-                        {
-                            dataGridView.Rows.Add(t.Id, t.Nome, t.Email, cid.Estado.Sigla, t.Cidade.Nome, t.Servico, t.Telefone);
-                        }
+                        Cidades cid = cidadesDAO.selectCidade(t.Cidade.Id);
+                        dataGridView.Rows.Add(t.Id, t.Nome, t.Email, cid.Estado.Sigla, t.Cidade.Nome, t.Servico, t.Telefone);
                     }
                 }
                 catch
@@ -184,10 +179,8 @@ namespace TCC.View.Pesquisas
                     // preenche as colunas
                     foreach (Trabalhadores t in listaTrab)
                     {
-                        foreach (Cidades cid in cidadesDAO.selectCidade(t.Cidade.Id))
-                        {
-                            dataGridView.Rows.Add(t.Id, t.Nome, t.Email, cid.Estado.Sigla, t.Cidade.Nome, t.Servico, t.Telefone);
-                        }
+                        Cidades cid = cidadesDAO.selectCidade(t.Cidade.Id);
+                        dataGridView.Rows.Add(t.Id, t.Nome, t.Email, cid.Estado.Sigla, t.Cidade.Nome, t.Servico, t.Telefone);
                     }
                 }
                 catch
@@ -200,12 +193,11 @@ namespace TCC.View.Pesquisas
 
         private void btLimpar_Click(object sender, EventArgs e)
         {
-            #region Limpar pesquisa
+            // Limpar pesquisa
             check = false;
             carregarTrabalhadores();
             comboFServico.Text = "";
             comboFCidade.Text = "";
-            #endregion
         }
 
         private void btPesquisar_Click(object sender, EventArgs e)
@@ -224,36 +216,33 @@ namespace TCC.View.Pesquisas
             #region Carregar dados do trabalhador nos itens do groupBox
             try
             {
-                foreach (Trabalhadores t in trabalhadoresDAO.select(Convert.ToInt16(dataGridView.CurrentRow.Cells["ID"].Value.ToString())))
+                Trabalhadores t = trabalhadoresDAO.select(Convert.ToInt16(dataGridView.CurrentRow.Cells["ID"].Value.ToString()));
+
+                textNome.Text = t.Nome;
+                textNome.Focus();
+                textEmail.Text = t.Email;
+
+                if (t.Cpf.Length < 14)
                 {
-                    textNome.Text = t.Nome;
-                    textNome.Focus();
-                    textEmail.Text = t.Email;
-
-                    if(t.Cpf.Length < 14)
-                    {
-                        textDocumento.Text = "";
-                    }
-                    else
-                    {
-                        textDocumento.Text = t.Cpf;
-                    }
-                    
-                    foreach (Cidades cid in cidadesDAO.selectCidade(t.Cidade.Id))
-                    {
-                        textUF.Text = cid.Estado.Nome;
-                    }
-
-                    textServico.Text = t.Servico;
-                    textCidade.Text = t.Cidade.Nome;
-                    textEndereco.Text = t.Endereco;
-                    textTel.Text = t.Telefone;
-                    textTel2.Text = t.Telefone2;
+                    textDocumento.Text = "";
                 }
+                else
+                {
+                    textDocumento.Text = t.Cpf;
+                }
+
+                Cidades cid = cidadesDAO.selectCidade(t.Cidade.Id);
+                textUF.Text = cid.Estado.Nome;
+
+                textServico.Text = t.Servico;
+                textCidade.Text = t.Cidade.Nome;
+                textEndereco.Text = t.Endereco;
+                textTel.Text = t.Telefone;
+                textTel2.Text = t.Telefone2;
             }
             catch
             {
-                //MessageBox.Show(ex.Message);
+
             }
             #endregion
         }
@@ -330,14 +319,10 @@ namespace TCC.View.Pesquisas
             switch (tabControl.SelectedIndex)
             {
                 case 0:
-                    #region Carregar os trabalhadores [carregarInfTrabalhador()]
                     carregarInfTrabalhador();
-                    #endregion
                     break;
                 case 1:
-                    #region Carregar as observações do trabalhador selecionado [carregarInfObservacoes(0)]
                     carregarInfObservacoes(0);
-                    #endregion
                     break;
             }
         }
@@ -349,14 +334,10 @@ namespace TCC.View.Pesquisas
                 switch (tabControl.SelectedIndex)
                 {
                     case 0:
-                        #region Carregar os trabalhadores [carregarInfTrabalhador()]
                         carregarInfTrabalhador();
-                        #endregion
                         break;
                     case 1:
-                        #region Carregar as observações do trabalhador selecionado [carregarInfObservacoes(0)]
                         carregarInfObservacoes(0);
-                        #endregion
                         break;
                 }
             }
@@ -364,26 +345,24 @@ namespace TCC.View.Pesquisas
 
         private void listBoxData_SelectedIndexChanged(object sender, EventArgs e)
         {
-            #region Carregar observações relacionadas à data selecionada [carregarInfObservacoes(1)]
+            // Carregar observações relacionadas à data selecionada
             carregarInfObservacoes(1);
 
             if (listBoxObs.SelectedIndex == -1)
             {
                 btAlterar.Enabled = false;
             }
-            #endregion
         }
 
         private void listBoxObs_SelectedIndexChanged(object sender, EventArgs e)
         {
-            #region Carregar texto da observação selecionada [carregarInfObservacoes(2)]
+            // Carregar texto da observação selecionada
             carregarInfObservacoes(2);
 
             if (listBoxObs.SelectedIndex >= 0)
             {
                 btAlterar.Enabled = true;
             }
-            #endregion
         }
 
         #region Auto Complete + ComboBox
@@ -546,9 +525,7 @@ namespace TCC.View.Pesquisas
 
         private void btExcluir_Click(object sender, EventArgs e)
         {
-            #region Botão excluir [excluirObs()]
             excluirObs();
-            #endregion
         }
 
         private void btAlterar_Click(object sender, EventArgs e)

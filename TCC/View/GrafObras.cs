@@ -35,6 +35,57 @@ namespace TCC.View
             radioStatus.Checked = true;
         }
 
+        private void comboAno_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (radioStatus.Checked)
+            {
+                gerarGraf(1);
+            }
+        }
+
+        private void GrafObras_Activated(object sender, EventArgs e)
+        {
+            try
+            {
+                comboAno.Items.Clear();
+
+                foreach (var year in db.Obras.Select(x => x.DataInicio.Year).Distinct().ToList())
+                {
+                    comboAno.Items.Add(year);
+                }
+
+                comboAno.SelectedIndex = 0;
+            }
+            catch
+            {
+
+            }
+        }
+
+        private void radioStatus_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radioStatus.Checked)
+            {
+                gerarGraf(1);
+            }
+        }
+
+        private void radioClientes_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radioClientes.Checked)
+            {
+                gerarGraf(2);
+            }
+        }
+
+        private void radioVisitas_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radioVisitas.Checked)
+            {
+                gerarGraf(3);
+            }
+        }
+
         private void gerarGraf(int tipo)
         {
             #region Limpar dados do gráfico
@@ -214,64 +265,9 @@ namespace TCC.View
             }
         }
 
-        #region Radio buttons
-        private void radioStatus_CheckedChanged(object sender, EventArgs e)
-        {
-            if (radioStatus.Checked)
-            {
-                gerarGraf(1);
-            }
-        }
-
-        private void radioClientes_CheckedChanged(object sender, EventArgs e)
-        {
-            if (radioClientes.Checked)
-            {
-                gerarGraf(2);
-            }
-        }
-
-        private void radioVisitas_CheckedChanged(object sender, EventArgs e)
-        {
-            if (radioVisitas.Checked)
-            {
-                gerarGraf(3);
-            }
-        }
-        #endregion
-
-        private void comboAno_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (radioStatus.Checked)
-            {
-                gerarGraf(1);
-            }
-        }
-
-        private void GrafObras_Activated(object sender, EventArgs e)
-        {
-            try
-            {
-                comboAno.Items.Clear();
-
-                foreach (var year in db.Obras.Select(x => x.DataInicio.Year).Distinct().ToList())
-                {
-                    comboAno.Items.Add(year);
-                }
-
-                comboAno.SelectedIndex = 0;
-            }
-            catch
-            {
-
-            }
-        }
-
         private void btSair_Click(object sender, EventArgs e)
         {
-            #region Botão sair
             this.Close();
-            #endregion
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using TCC.Model;
 using TCC.Model.Classes;
 using TCC.Model.DAO;
 using TCC.View.Add;
@@ -15,13 +16,8 @@ namespace TCC.View.Listagens_Cadastros
         private CidadesDAO cidadesDAO { get; set; }
         private EstadosDAO estadosDAO { get; set; }
         private Fornecedores fornecedor;
-        private EnvioDeEmail envioDeEmail;
-        private AddObservacao addObservacao;
         private DialogResult resposta;
-        private Regex rg;
-        private DataGridViewImageColumn img, img2;
         private bool existe;
-        private int i, j, verif;
 
         public ListForn()
         {
@@ -34,7 +30,6 @@ namespace TCC.View.Listagens_Cadastros
         private void ListForn_Load(object sender, EventArgs e)
         {
             #region Inicialização do dataGridView (criação das colunas) - ListForn
-            // Adiciona as colunas a serem exibidas (conteúdo, título da coluna)
             dataGridView.Columns.Add("Id", "Código");
             dataGridView.Columns.Add("Nome", "Nome");
             dataGridView.Columns.Add("Email", "E-mail");
@@ -43,22 +38,20 @@ namespace TCC.View.Listagens_Cadastros
             dataGridView.Columns.Add("Endereco", "Endereço");
             dataGridView.Columns.Add("Telefone", "Telefone");
 
-            // Criação da coluna de imagens
-            img = new DataGridViewImageColumn();
-            img.Image = MenuPrincipal.imageEmail();
+            DataGridViewImageColumn img = new DataGridViewImageColumn();
+            img.Image = Variaveis.getEmail();
             dataGridView.Columns.Add(img);
             img.HeaderText = "";
             img.Name = "img";
             img.ImageLayout = DataGridViewImageCellLayout.Zoom;
 
-            img2 = new DataGridViewImageColumn();
-            img2.Image = MenuPrincipal.imageObs();
+            DataGridViewImageColumn img2 = new DataGridViewImageColumn();
+            img2.Image = Variaveis.getObs();
             dataGridView.Columns.Add(img2);
             img2.HeaderText = "";
             img2.Name = "img2";
             img2.ImageLayout = DataGridViewImageCellLayout.Zoom;
 
-            // Largura das colunas (o default é 100)
             dataGridView.Columns["Id"].Width = 50;
             dataGridView.Columns["Nome"].Width = 200;
             dataGridView.Columns["Email"].Width = 200;
@@ -84,9 +77,7 @@ namespace TCC.View.Listagens_Cadastros
             }
             #endregion
 
-            #region Carregar cidades [carregarCidades()]
             carregarCidades();
-            #endregion
         }
 
         private void dataGridView_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
@@ -107,10 +98,8 @@ namespace TCC.View.Listagens_Cadastros
 
         private void ListForn_Activated(object sender, EventArgs e)
         {
-            #region Carregar fornecedores quando o form for focado [carregarForn()]
             carregarForn();
             dataGridView.Focus();
-            #endregion
         }
 
         private void carregarForn()
@@ -118,17 +107,13 @@ namespace TCC.View.Listagens_Cadastros
             #region Carregar fornecedores no dataGridView
             try
             {
-                // limpa as linhas da grid
                 dataGridView.Rows.Clear();
 
                 // preenche as colunas
                 foreach (Fornecedores f in fornecedoresDAO.select())
                 {
-                    foreach (Cidades cid in cidadesDAO.selectCidade(f.Cidade.Id))
-                    {
-                        dataGridView.Rows.Add(f.Id, f.Nome, f.Email, cid.Estado.Sigla, f.Cidade.Nome, f.Endereco, f.Telefone);
-                    }
-
+                    Cidades cid = cidadesDAO.selectCidade(f.Cidade.Id);
+                    dataGridView.Rows.Add(f.Id, f.Nome, f.Email, cid.Estado.Sigla, f.Cidade.Nome, f.Endereco, f.Telefone);
                 }
             }
             catch
@@ -158,9 +143,7 @@ namespace TCC.View.Listagens_Cadastros
                 groupBoxForn.Text = "Alteração de Fornecedor";
                 #endregion
 
-                #region Carregar dados do fornecedor no groupBox [carregarInfForn()]
                 carregarInfForn();
-                #endregion
             }
         }
 
@@ -172,9 +155,7 @@ namespace TCC.View.Listagens_Cadastros
             groupBoxForn.Text = "Alteração de Fornecedor";
             #endregion
 
-            #region Carregar dados do fornecedor no groupBox [carregarInfForn()]
             carregarInfForn();
-            #endregion
         }
 
         private void dataGridView_SelectionChanged(object sender, EventArgs e)
@@ -193,36 +174,30 @@ namespace TCC.View.Listagens_Cadastros
             #region Carregar dados do fornecedor nos itens do groupBox
             try
             {
-                foreach (Fornecedores f in fornecedoresDAO.select(Convert.ToInt16(dataGridView.CurrentRow.Cells["ID"].Value.ToString())))
-                {
-                    textNome.Text = f.Nome;
-                    textNome.Focus();
-                    textEmail.Text = f.Email;
-                    maskedDocumento.Text = f.Cnpj;
+                Fornecedores f = fornecedoresDAO.select(Convert.ToInt16(dataGridView.CurrentRow.Cells["ID"].Value.ToString()));
+                textNome.Text = f.Nome;
+                textNome.Focus();
+                textEmail.Text = f.Email;
+                maskedDocumento.Text = f.Cnpj;
 
-                    foreach (Cidades cid in cidadesDAO.selectCidade(f.Cidade.Id))
-                    {
-                        comboUF.SelectedValue = cid.Estado.Id;
-                    }
+                Cidades cid = cidadesDAO.selectCidade(f.Cidade.Id);
+                comboUF.SelectedValue = cid.Estado.Id;
 
-                    comboCidade.SelectedValue = f.Cidade.Id;
-                    textEndereco.Text = f.Endereco;
-                    textTel.Text = f.Telefone;
-                    textTel2.Text = f.Telefone2;
-                }
+                comboCidade.SelectedValue = f.Cidade.Id;
+                textEndereco.Text = f.Endereco;
+                textTel.Text = f.Telefone;
+                textTel2.Text = f.Telefone2;
             }
             catch
             {
-                //MessageBox.Show(ex.Message);
+                
             }
             #endregion
         }
 
         private void btExcluir_Click(object sender, EventArgs e)
         {
-            #region Excluir fornecedor clicando no botão excluir [excluirForn()]
             excluirForn();
-            #endregion
         }
 
         private void dataGridView_KeyDown(object sender, KeyEventArgs e)
@@ -285,7 +260,7 @@ namespace TCC.View.Listagens_Cadastros
             }
             catch
             {
-                //MessageBox.Show(ex.Message);
+                
             }
         }
 
@@ -311,16 +286,15 @@ namespace TCC.View.Listagens_Cadastros
             #endregion
 
             #region Validação de CNPJ
-            int primeiroDigitoVerif = 0, segundoDigitoVerif = 0, soma = 0;
-            j = 0;
+            int primeiroDigitoVerif = 0, segundoDigitoVerif = 0, soma = 0, j = 0;
 
-            for (i = 5; i >= 2; i--)
+            for (int i = 5; i >= 2; i--)
             {
                 soma += i * Convert.ToInt16(documento[j].ToString());
                 j++;
             }
 
-            for (i = 9; i >= 2; i--)
+            for (int i = 9; i >= 2; i--)
             {
                 soma += i * Convert.ToInt16(documento[j].ToString());
                 j++;
@@ -340,13 +314,13 @@ namespace TCC.View.Listagens_Cadastros
                 j = 0;
                 soma = 0;
 
-                for (i = 6; i >= 2; i--)
+                for (int i = 6; i >= 2; i--)
                 {
                     soma += i * Convert.ToInt16(documento[j].ToString());
                     j++;
                 }
 
-                for (i = 9; i > 2; i--)
+                for (int i = 9; i > 2; i--)
                 {
                     soma += i * Convert.ToInt16(documento[j].ToString());
                     j++;
@@ -381,7 +355,7 @@ namespace TCC.View.Listagens_Cadastros
             errorProvider.SetError(comboCidade, string.Empty);
             errorProvider.SetError(textEndereco, string.Empty);
 
-            verif = 0;
+            int verif = 0;
 
             if (textNome.Text.Trim().Equals(""))
             {
@@ -391,7 +365,7 @@ namespace TCC.View.Listagens_Cadastros
 
             if (!textEmail.Text.Trim().Equals(""))
             {
-                rg = new Regex(@"^[A-Za-z0-9](([_\.\-]?[a-zA-Z0-9]+)*)@([A-Za-z0-9]+)(([\.\-]?[a-zA-Z0-9]+)*)\.([A-Za-z]{2,})$");
+                Regex rg = new Regex(@"^[A-Za-z0-9](([_\.\-]?[a-zA-Z0-9]+)*)@([A-Za-z0-9]+)(([\.\-]?[a-zA-Z0-9]+)*)\.([A-Za-z]{2,})$");
 
                 if (!rg.IsMatch(textEmail.Text))
                 {
@@ -506,23 +480,17 @@ namespace TCC.View.Listagens_Cadastros
 
         private void btSalvar_Click(object sender, EventArgs e)
         {
-            #region Botão salvar [salvarFornecedor()]
             salvarFornecedor();
-            #endregion
         }
 
         private void btCancelar_Click(object sender, EventArgs e)
         {
-            #region Botão cancelar [limparCampos()]
             limparCampos();
-            #endregion
         }
 
         private void comboUF_SelectedIndexChanged(object sender, EventArgs e)
         {
-            #region Carregar cidades [carregarCidades()]
             carregarCidades();
-            #endregion
         }
 
         private void carregarCidades()
@@ -624,7 +592,7 @@ namespace TCC.View.Listagens_Cadastros
                 }
                 if (!existe)
                 {
-                    envioDeEmail = new EnvioDeEmail(dataGridView.CurrentRow.Cells["Email"].Value.ToString());
+                    EnvioDeEmail envioDeEmail = new EnvioDeEmail(dataGridView.CurrentRow.Cells["Email"].Value.ToString());
                     envioDeEmail.MdiParent = this.ParentForm;
                     envioDeEmail.Show();
                 }
@@ -644,7 +612,7 @@ namespace TCC.View.Listagens_Cadastros
                 }
                 if (!existe)
                 {
-                    addObservacao = new AddObservacao(3, dataGridView.CurrentRow.Cells["ID"].Value.ToString(), dataGridView.CurrentRow.Cells["Nome"].Value.ToString());
+                    AddObservacao addObservacao = new AddObservacao(3, dataGridView.CurrentRow.Cells["ID"].Value.ToString(), dataGridView.CurrentRow.Cells["Nome"].Value.ToString());
                     addObservacao.MdiParent = this.ParentForm;
                     addObservacao.Show();
                 }
@@ -654,9 +622,7 @@ namespace TCC.View.Listagens_Cadastros
 
         private void btSair_Click(object sender, EventArgs e)
         {
-            #region Botão sair
             this.Close();
-            #endregion
         }
     }
 }

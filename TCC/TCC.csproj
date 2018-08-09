@@ -152,6 +152,7 @@
     <Compile Include="Model\Classes\Projetos.cs" />
     <Compile Include="Model\Classes\Status.cs" />
     <Compile Include="Model\MDIBorder.cs" />
+    <Compile Include="Model\Variaveis.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="View\Add\AddAgendamento.cs">
@@ -190,16 +191,22 @@
     <Compile Include="View\Add\AddTrab.Designer.cs">
       <DependentUpon>AddTrab.cs</DependentUpon>
     </Compile>
-    <Compile Include="View\Admin\PalavrasProibidasAdmin.cs">
+    <Compile Include="View\SplashScreen.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="View\Admin\PalavrasProibidasAdmin.Designer.cs">
+    <Compile Include="View\SplashScreen.Designer.cs">
+      <DependentUpon>SplashScreen.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Utilitarios\PalavrasProibidasAdmin.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Utilitarios\PalavrasProibidasAdmin.Designer.cs">
       <DependentUpon>PalavrasProibidasAdmin.cs</DependentUpon>
     </Compile>
-    <Compile Include="View\Backup.cs">
+    <Compile Include="View\Utilitarios\Backup.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="View\Backup.Designer.cs">
+    <Compile Include="View\Utilitarios\Backup.Designer.cs">
       <DependentUpon>Backup.cs</DependentUpon>
     </Compile>
     <Compile Include="View\Carregando.cs">
@@ -208,10 +215,10 @@
     <Compile Include="View\Carregando.Designer.cs">
       <DependentUpon>Carregando.cs</DependentUpon>
     </Compile>
-    <Compile Include="View\EnvioDeEmail.cs">
+    <Compile Include="View\Utilitarios\EnvioDeEmail.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="View\EnvioDeEmail.Designer.cs">
+    <Compile Include="View\Utilitarios\EnvioDeEmail.Designer.cs">
       <DependentUpon>EnvioDeEmail.cs</DependentUpon>
     </Compile>
     <Compile Include="View\FormLogin.cs">
@@ -244,10 +251,10 @@
     <Compile Include="View\Listagens-Cadastros\ListTrab.Designer.cs">
       <DependentUpon>ListTrab.cs</DependentUpon>
     </Compile>
-    <Compile Include="View\Admin\LogsAdmin.cs">
+    <Compile Include="View\Utilitarios\LogsAdmin.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="View\Admin\LogsAdmin.Designer.cs">
+    <Compile Include="View\Utilitarios\LogsAdmin.Designer.cs">
       <DependentUpon>LogsAdmin.cs</DependentUpon>
     </Compile>
     <Compile Include="View\MenuPrincipal.cs">
@@ -355,16 +362,19 @@
     <EmbeddedResource Include="View\Add\AddTrab.resx">
       <DependentUpon>AddTrab.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="View\Admin\PalavrasProibidasAdmin.resx">
+    <EmbeddedResource Include="View\SplashScreen.resx">
+      <DependentUpon>SplashScreen.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Utilitarios\PalavrasProibidasAdmin.resx">
       <DependentUpon>PalavrasProibidasAdmin.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="View\Backup.resx">
+    <EmbeddedResource Include="View\Utilitarios\Backup.resx">
       <DependentUpon>Backup.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\Carregando.resx">
       <DependentUpon>Carregando.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="View\EnvioDeEmail.resx">
+    <EmbeddedResource Include="View\Utilitarios\EnvioDeEmail.resx">
       <DependentUpon>EnvioDeEmail.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\FormLogin.resx">
@@ -382,7 +392,7 @@
     <EmbeddedResource Include="View\Listagens-Cadastros\ListTrab.resx">
       <DependentUpon>ListTrab.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="View\Admin\LogsAdmin.resx">
+    <EmbeddedResource Include="View\Utilitarios\LogsAdmin.resx">
       <DependentUpon>LogsAdmin.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\MenuPrincipal.resx">
@@ -440,7 +450,6 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
