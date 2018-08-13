@@ -58,7 +58,8 @@ namespace TCC.View
 
             if (log != null)
             {
-                statusLabel.Text = "Último Login: " + log.Data + " - " + log.Hora;
+                //statusLabel.Text = "Último Login: " + log.Data + " - " + log.Hora;
+                statusLabel.Text = "Último Login: " + log.Data;
             }
             else
             {
@@ -66,12 +67,7 @@ namespace TCC.View
             }
 
             // Inserção de log de entrada de usuário
-            log = new Logs();
-            log.Acao = acoesDAO.select(1);
-            log.Data = DateTime.Today.ToString("dd/MM/yyyy");
-            log.Hora = DateTime.Now.ToString("HH:mm");
-            log.Usuario = usuariosDAO.select(Variaveis.getIdUsuario());
-            logsDAO.insert(log);
+            logsDAO.insert(1);
 
             System.Threading.Thread.Sleep(1000);
         }
@@ -458,12 +454,7 @@ namespace TCC.View
         private void MenuPrincipal_FormClosing(object sender, FormClosingEventArgs e)
         {
             // Inserção de log de saída de usuário
-            Logs log = new Logs();
-            log.Acao = acoesDAO.select(2);
-            log.Data = DateTime.Today.ToString("dd/MM/yyyy");
-            log.Hora = DateTime.Now.ToString("HH:mm");
-            log.Usuario = usuariosDAO.select(Variaveis.getIdUsuario());
-            logsDAO.insert(log);
+            logsDAO.insert(2);
         }
     }
 }

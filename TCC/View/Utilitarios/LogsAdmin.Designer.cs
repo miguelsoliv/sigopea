@@ -29,10 +29,11 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LogsAdmin));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.panel = new System.Windows.Forms.Panel();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.maskedData = new System.Windows.Forms.MaskedTextBox();
+            this.checkData = new System.Windows.Forms.CheckBox();
+            this.dateTimePicker = new System.Windows.Forms.DateTimePicker();
             this.btLimpar = new System.Windows.Forms.Button();
             this.btPesquisar = new System.Windows.Forms.Button();
             this.groupBoxFAcao = new System.Windows.Forms.GroupBox();
@@ -62,31 +63,41 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.maskedData);
+            this.groupBox1.Controls.Add(this.checkData);
+            this.groupBox1.Controls.Add(this.dateTimePicker);
             this.groupBox1.Controls.Add(this.btLimpar);
             this.groupBox1.Controls.Add(this.btPesquisar);
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Left;
-            this.groupBox1.Location = new System.Drawing.Point(481, 0);
+            this.groupBox1.Location = new System.Drawing.Point(437, 0);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(296, 50);
+            this.groupBox1.Size = new System.Drawing.Size(403, 50);
             this.groupBox1.TabIndex = 15;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Filtro por Data";
             // 
-            // maskedData
+            // checkData
             // 
-            this.maskedData.Location = new System.Drawing.Point(12, 19);
-            this.maskedData.Mask = "00/00/0000";
-            this.maskedData.Name = "maskedData";
-            this.maskedData.Size = new System.Drawing.Size(89, 20);
-            this.maskedData.TabIndex = 4;
-            this.maskedData.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.maskedData.ValidatingType = typeof(System.DateTime);
+            this.checkData.AutoSize = true;
+            this.checkData.Location = new System.Drawing.Point(6, 0);
+            this.checkData.Name = "checkData";
+            this.checkData.Size = new System.Drawing.Size(143, 17);
+            this.checkData.TabIndex = 6;
+            this.checkData.Text = "Mostrar Logs até a Data:";
+            this.checkData.UseVisualStyleBackColor = true;
+            this.checkData.CheckedChanged += new System.EventHandler(this.checkData_CheckedChanged);
+            // 
+            // dateTimePicker
+            // 
+            this.dateTimePicker.Enabled = false;
+            this.dateTimePicker.Location = new System.Drawing.Point(6, 20);
+            this.dateTimePicker.MinDate = new System.DateTime(2010, 1, 1, 0, 0, 0, 0);
+            this.dateTimePicker.Name = "dateTimePicker";
+            this.dateTimePicker.Size = new System.Drawing.Size(226, 20);
+            this.dateTimePicker.TabIndex = 5;
             // 
             // btLimpar
             // 
             this.btLimpar.Image = ((System.Drawing.Image)(resources.GetObject("btLimpar.Image")));
-            this.btLimpar.Location = new System.Drawing.Point(213, 17);
+            this.btLimpar.Location = new System.Drawing.Point(320, 17);
             this.btLimpar.Name = "btLimpar";
             this.btLimpar.Size = new System.Drawing.Size(77, 23);
             this.btLimpar.TabIndex = 3;
@@ -98,7 +109,7 @@
             // btPesquisar
             // 
             this.btPesquisar.Image = ((System.Drawing.Image)(resources.GetObject("btPesquisar.Image")));
-            this.btPesquisar.Location = new System.Drawing.Point(130, 17);
+            this.btPesquisar.Location = new System.Drawing.Point(238, 17);
             this.btPesquisar.Name = "btPesquisar";
             this.btPesquisar.Size = new System.Drawing.Size(77, 23);
             this.btPesquisar.TabIndex = 2;
@@ -111,9 +122,9 @@
             // 
             this.groupBoxFAcao.Controls.Add(this.comboFAcao);
             this.groupBoxFAcao.Dock = System.Windows.Forms.DockStyle.Left;
-            this.groupBoxFAcao.Location = new System.Drawing.Point(266, 0);
+            this.groupBoxFAcao.Location = new System.Drawing.Point(228, 0);
             this.groupBoxFAcao.Name = "groupBoxFAcao";
-            this.groupBoxFAcao.Size = new System.Drawing.Size(215, 50);
+            this.groupBoxFAcao.Size = new System.Drawing.Size(209, 50);
             this.groupBoxFAcao.TabIndex = 14;
             this.groupBoxFAcao.TabStop = false;
             this.groupBoxFAcao.Text = "Filtro por Ação";
@@ -125,7 +136,7 @@
             this.comboFAcao.FormattingEnabled = true;
             this.comboFAcao.Location = new System.Drawing.Point(12, 19);
             this.comboFAcao.Name = "comboFAcao";
-            this.comboFAcao.Size = new System.Drawing.Size(174, 21);
+            this.comboFAcao.Size = new System.Drawing.Size(179, 21);
             this.comboFAcao.TabIndex = 1;
             this.comboFAcao.DropDown += new System.EventHandler(this.comboFAcao_DropDown);
             this.comboFAcao.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.comboFAcao_PreviewKeyDown);
@@ -136,7 +147,7 @@
             this.groupBoxFUsuario.Dock = System.Windows.Forms.DockStyle.Left;
             this.groupBoxFUsuario.Location = new System.Drawing.Point(0, 0);
             this.groupBoxFUsuario.Name = "groupBoxFUsuario";
-            this.groupBoxFUsuario.Size = new System.Drawing.Size(266, 50);
+            this.groupBoxFUsuario.Size = new System.Drawing.Size(228, 50);
             this.groupBoxFUsuario.TabIndex = 10;
             this.groupBoxFUsuario.TabStop = false;
             this.groupBoxFUsuario.Text = "Filtro por Usuário";
@@ -148,7 +159,7 @@
             this.comboFUsuario.FormattingEnabled = true;
             this.comboFUsuario.Location = new System.Drawing.Point(12, 19);
             this.comboFUsuario.Name = "comboFUsuario";
-            this.comboFUsuario.Size = new System.Drawing.Size(227, 21);
+            this.comboFUsuario.Size = new System.Drawing.Size(181, 21);
             this.comboFUsuario.TabIndex = 15;
             this.comboFUsuario.DropDown += new System.EventHandler(this.comboFUsuario_DropDown);
             this.comboFUsuario.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.comboFUsuario_PreviewKeyDown);
@@ -179,8 +190,8 @@
             this.dataGridView.Name = "dataGridView";
             this.dataGridView.ReadOnly = true;
             this.dataGridView.RowHeadersVisible = false;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(110)))), ((int)(((byte)(170)))), ((int)(((byte)(255)))));
-            this.dataGridView.RowsDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(110)))), ((int)(((byte)(170)))), ((int)(((byte)(255)))));
+            this.dataGridView.RowsDefaultCellStyle = dataGridViewCellStyle1;
             this.dataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridView.Size = new System.Drawing.Size(941, 488);
             this.dataGridView.TabIndex = 11;
@@ -223,6 +234,7 @@
         private System.Windows.Forms.Button btSair;
         private System.Windows.Forms.DataGridView dataGridView;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.MaskedTextBox maskedData;
+        private System.Windows.Forms.DateTimePicker dateTimePicker;
+        private System.Windows.Forms.CheckBox checkData;
     }
 }

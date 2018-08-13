@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Windows.Forms;
 using TCC.Model.Classes;
 using TCC.Model.DAO;
@@ -12,8 +11,6 @@ namespace TCC.View.Admin
         private AcoesDAO acoesDAO { get; set; }
         private LogsDAO logsDAO { get; set; }
         private UsuariosDAO usuariosDAO { get; set; }
-        private IEnumerable<Logs> listaLogs;
-        private string data;
         private bool check;
 
         public LogsAdmin()
@@ -23,6 +20,7 @@ namespace TCC.View.Admin
             logsDAO = new LogsDAO();
             usuariosDAO = new UsuariosDAO();
             check = false;
+            dateTimePicker.MaxDate = DateTime.Today;
         }
 
         private void LogsAdmin_Load(object sender, EventArgs e)
@@ -36,7 +34,7 @@ namespace TCC.View.Admin
             dataGridView.Columns["Id"].Width = 50;
             dataGridView.Columns["Usuarios.Login"].Width = 200;
             dataGridView.Columns["Acoes.Descricao"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            dataGridView.Columns["DataHora"].Width = 110;
+            dataGridView.Columns["DataHora"].Width = 120;
             #endregion
 
             // Carregar usuários
@@ -113,117 +111,94 @@ namespace TCC.View.Admin
 
         private void btPesquisar_Click(object sender, EventArgs e)
         {
-            // Carregar logs que correspondam com os dados da pesquisa
+            if (comboFUsuario.Text.Trim().Equals("") && comboFAcao.Text.Trim().Equals("") && !checkData.Checked)
+            {
+                return;
+            }
+
             check = true;
             carregarLogs();
         }
 
         private void btLimpar_Click(object sender, EventArgs e)
         {
+            if (!check)
+            {
+                return;
+            }
+
             // Limpar pesquisa
             check = false;
             carregarLogs();
             comboFAcao.Text = "";
             comboFUsuario.Text = "";
-            maskedData.Clear();
+            dateTimePicker.Value = DateTime.Today;
+        }
+
+        private void checkData_CheckedChanged(object sender, EventArgs e)
+        {
+            dateTimePicker.Enabled = checkData.Checked ? true : false;
         }
 
         private void carregarLogs()
         {
             dataGridView.Rows.Clear();
 
-            // Check->false: caso tenha feito uma pesquisa, não reseta as linhas do dataGrid até
-            // que o usuário aperte no botão "Limpar" ou feche o form
+            // Carregar logs
             if (check == false)
             {
-                #region Carregar logs no dataGridView
-                try
+                foreach (Logs l in logsDAO.select())
                 {
-                    // preenche as colunas
-                    foreach (Logs l in logsDAO.select())
-                    {
-                        dataGridView.Rows.Add(l.Id, l.Usuario.Login, l.Acao.Descricao, l.Data + " " + l.Hora);
-                    }
+                    dataGridView.Rows.Add(l.Id, l.Usuario.Login, l.Acao.Descricao, l.Data.ToString("dd/MM/yyyy HH:mm:ss"));
                 }
-                catch
-                {
-
-                }
-                #endregion
             }
+            // Carregar logs que se encaixam na pesquisa
             else
             {
-                #region Carregar logs que se encaixam na pesquisa
-                try
+                IEnumerable<Logs> listaLogs;
+
+                if (!comboFUsuario.Text.Trim().Equals("") && !comboFAcao.Text.Trim().Equals(""))
                 {
-                    // Caso o usuário queira fazer uma busca só por dia/mês/ano
-                    string[] partes = maskedData.Text.Replace(" ", "").Split('/');
-
-                    if (!partes[0].Equals("") && !partes[1].Equals("") && !partes[2].Equals(""))
+                    if (checkData.Checked)
                     {
-                        data = partes[0] + "/" + partes[1] + "/" + partes[2];
+                        listaLogs = logsDAO.selectTudo(comboFUsuario.Text, comboFAcao.Text, dateTimePicker.Value);
                     }
-                    else if (!partes[0].Equals("") && !partes[1].Equals(""))
+                    else
                     {
-                        data = partes[0] + "/" + partes[1] + "/";
-                    }
-                    else if (!partes[1].Equals("") && !partes[2].Equals(""))
-                    {
-                        data = "/" + partes[1] + "/" + partes[2];
-                    }
-                    else if (!partes[0].Equals(""))
-                    {
-                        data = partes[0] + "/";
-                    }
-                    else if (!partes[1].Equals(""))
-                    {
-                        data = "/" + partes[1] + "/";
-                    }
-                    else if (!partes[2].Equals(""))
-                    {
-                        data = "/" + partes[2];
-                    }
-
-                    if (!comboFUsuario.Text.Trim().Equals("") && !comboFAcao.Text.Trim().Equals("") && !maskedData.Text.Equals("  /  /"))
-                    {
-                        listaLogs = logsDAO.select().Where(x => x.Usuario.Login.ToUpper().Contains(comboFUsuario.Text.Trim().ToUpper()) && x.Acao.Descricao.ToUpper().Contains(comboFAcao.Text.Trim().ToUpper()) && x.Data.Contains(data));
-                    }
-                    else if (!comboFUsuario.Text.Trim().Equals("") && !comboFAcao.Text.Trim().Equals(""))
-                    {
-                        listaLogs = logsDAO.select().Where(x => x.Usuario.Login.ToUpper().Contains(comboFUsuario.Text.Trim().ToUpper()) && x.Acao.Descricao.ToUpper().Contains(comboFAcao.Text.Trim().ToUpper()));
-                    }
-                    else if (!comboFUsuario.Text.Trim().Equals("") && !maskedData.Text.Equals("  /  /"))
-                    {
-                        listaLogs = logsDAO.select().Where(x => x.Usuario.Login.ToUpper().Contains(comboFUsuario.Text.Trim().ToUpper()) && x.Data.Contains(data));
-                    }
-                    else if (!comboFAcao.Text.Trim().Equals("") && !maskedData.Text.Equals("  /  /"))
-                    {
-                        listaLogs = logsDAO.select().Where(x => x.Acao.Descricao.ToUpper().Contains(comboFAcao.Text.Trim().ToUpper()) && x.Data.Contains(data));
-                    }
-                    else if (!comboFUsuario.Text.Trim().Equals(""))
-                    {
-                        listaLogs = logsDAO.select().Where(x => x.Usuario.Login.ToUpper().Contains(comboFUsuario.Text.Trim().ToUpper()));
-                    }
-                    else if (!comboFAcao.Text.Trim().Equals(""))
-                    {
-                        listaLogs = logsDAO.select().Where(x => x.Acao.Descricao.ToUpper().Contains(comboFAcao.Text.Trim().ToUpper()));
-                    }
-                    else if (!maskedData.Text.Equals("  /  /"))
-                    {
-                        listaLogs = logsDAO.select().Where(x => x.Data.Contains(data));
-                    }
-
-                    //preenche as colunas
-                    foreach (Logs l in listaLogs)
-                    {
-                        dataGridView.Rows.Add(l.Id, l.Usuario.Login, l.Acao.Descricao, l.Data + " " + l.Hora);
+                        listaLogs = logsDAO.selectUsuarioAcao(comboFUsuario.Text, comboFAcao.Text);
                     }
                 }
-                catch
+                else if (!comboFUsuario.Text.Trim().Equals(""))
                 {
-
+                    if (checkData.Checked)
+                    {
+                        listaLogs = logsDAO.selectUsuarioData(comboFUsuario.Text, dateTimePicker.Value);
+                    }
+                    else
+                    {
+                        listaLogs = logsDAO.selectUsuario(comboFUsuario.Text);
+                    }
                 }
-                #endregion
+                else if (!comboFAcao.Text.Trim().Equals(""))
+                {
+                    if (checkData.Checked)
+                    {
+                        listaLogs = logsDAO.selectAcaoData(comboFAcao.Text, dateTimePicker.Value);
+                    }
+                    else
+                    {
+                        listaLogs = logsDAO.selectAcao(comboFAcao.Text);
+                    }
+                }
+                else
+                {
+                    listaLogs = logsDAO.selectData(dateTimePicker.Value);
+                }
+
+                foreach (Logs l in listaLogs)
+                {
+                    dataGridView.Rows.Add(l.Id, l.Usuario.Login, l.Acao.Descricao, l.Data.ToString("dd/MM/yyyy HH:mm:ss"));
+                }
             }
         }
 

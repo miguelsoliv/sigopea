@@ -2,47 +2,34 @@
 using System.Linq;
 using System.Data.Entity;
 using TCC.Model.Classes;
-using System;
 
 namespace TCC.Model.DAO
 {
     class ClientesDAO
     {
         private ModelDB db { get; set; }
-        private AcoesDAO acoesDAO { get; set; }
-        private UsuariosDAO usuariosDAO { get; set; }
+        private LogsDAO logsDAO { get; set; }
 
         public ClientesDAO()
         {
             db = new ModelDB();
-            acoesDAO = new AcoesDAO();
-            usuariosDAO = new UsuariosDAO(); 
+            logsDAO = new LogsDAO();
         }
 
         public void insert(Clientes clienteInf)
         {
             clienteInf.Cidade = db.Cidades.Where(x => x.Id == clienteInf.Cidade.Id).First();
             db.Clientes.Add(clienteInf);
+            db.SaveChanges();
 
             // Inserção de log de inclusão de cliente
-            Logs log = new Logs();
-            log.Acao = acoesDAO.select(5);
-            log.Data = DateTime.Today.ToString("dd/MM/yyyy");
-            log.Hora = DateTime.Now.ToString("HH:mm");
-            log.Usuario = usuariosDAO.select(Variaveis.getIdUsuario());
-
-            db.Acoes.Attach(log.Acao);
-            db.Usuarios.Attach(log.Usuario);
-            db.Logs.Add(log);
-
-            db.SaveChanges();
+            logsDAO.insert(5);
         }
 
         public void update(Clientes clienteInf)
         {
-            #region Alteração de cliente
             clienteInf.Cidade = db.Cidades.Where(x => x.Id == clienteInf.Cidade.Id).First();
-            // posiciona no registro a ser alterado
+
             Clientes clienteAlt = db.Clientes.Where(x => x.Id == clienteInf.Id).First();
             clienteAlt.Cidade = clienteInf.Cidade;
             clienteAlt.Nome = clienteInf.Nome;
@@ -52,39 +39,20 @@ namespace TCC.Model.DAO
             clienteAlt.Endereco = clienteInf.Endereco;
             clienteAlt.Telefone = clienteInf.Telefone;
             clienteAlt.Telefone2 = clienteInf.Telefone2;
-            #endregion
+            db.SaveChanges();
 
             // Inserção de log de alteração de cliente
-            Logs log = new Logs();
-            log.Acao = acoesDAO.select(6);
-            log.Data = DateTime.Today.ToString("dd/MM/yyyy");
-            log.Hora = DateTime.Now.ToString("HH:mm");
-            log.Usuario = usuariosDAO.select(Variaveis.getIdUsuario());
-
-            db.Acoes.Attach(log.Acao);
-            db.Usuarios.Attach(log.Usuario);
-            db.Logs.Add(log);
-
-            db.SaveChanges();
+            logsDAO.insert(6);
         }
 
         public void delete(int id)
         {
             Clientes clienteExc = db.Clientes.Where(x => x.Id == id).First();
             clienteExc.Excluido = true;
+            db.SaveChanges();
 
             // Inserção de log de exclusão de cliente
-            Logs log = new Logs();
-            log.Acao = acoesDAO.select(7);
-            log.Data = DateTime.Today.ToString("dd/MM/yyyy");
-            log.Hora = DateTime.Now.ToString("HH:mm");
-            log.Usuario = usuariosDAO.select(Variaveis.getIdUsuario());
-
-            db.Acoes.Attach(log.Acao);
-            db.Usuarios.Attach(log.Usuario);
-            db.Logs.Add(log);
-
-            db.SaveChanges();
+            logsDAO.insert(7);
         }
 
         public IEnumerable<Clientes> select()

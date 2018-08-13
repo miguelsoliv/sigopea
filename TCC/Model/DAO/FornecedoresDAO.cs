@@ -2,45 +2,34 @@
 using System.Linq;
 using TCC.Model.Classes;
 using System.Data.Entity;
-using System;
 
 namespace TCC.Model.DAO
 {
     class FornecedoresDAO
     {
         private ModelDB db { get; set; }
-        private AcoesDAO acoesDAO { get; set; }
-        private UsuariosDAO usuariosDAO { get; set; }
+        private LogsDAO logsDAO { get; set; }
 
         public FornecedoresDAO()
         {
             db = new ModelDB();
+            logsDAO = new LogsDAO();
         }
 
         public void insert(Fornecedores fornecedorInf)
         {
             fornecedorInf.Cidade = db.Cidades.Where(x => x.Id == fornecedorInf.Cidade.Id).First();
             db.Fornecedores.Add(fornecedorInf);
+            db.SaveChanges();
 
             // Inserção de log de inclusão de fornecedor
-            Logs log = new Logs();
-            log.Acao = acoesDAO.select(11);
-            log.Data = DateTime.Today.ToString("dd/MM/yyyy");
-            log.Hora = DateTime.Now.ToString("HH:mm");
-            log.Usuario = usuariosDAO.select(Variaveis.getIdUsuario());
-
-            db.Acoes.Attach(log.Acao);
-            db.Usuarios.Attach(log.Usuario);
-            db.Logs.Add(log);
-
-            db.SaveChanges();
+            logsDAO.insert(11);
         }
 
         public void update(Fornecedores fornecedorInf)
         {
-            #region Alteração de fornecedor
             fornecedorInf.Cidade = db.Cidades.Where(x => x.Id == fornecedorInf.Cidade.Id).First();
-            // posiciona no registro a ser alterado
+
             Fornecedores fornecedorAlt = db.Fornecedores.Where(x => x.Id == fornecedorInf.Id).First();
             fornecedorAlt.Cidade = fornecedorInf.Cidade;
             fornecedorAlt.Nome = fornecedorInf.Nome;
@@ -48,39 +37,20 @@ namespace TCC.Model.DAO
             fornecedorAlt.Endereco = fornecedorInf.Endereco;
             fornecedorAlt.Telefone = fornecedorInf.Telefone;
             fornecedorAlt.Telefone2 = fornecedorInf.Telefone2;
-            #endregion
-
-            // Inserção de log de alteração de fornecedor
-            Logs log = new Logs();
-            log.Acao = acoesDAO.select(12);
-            log.Data = DateTime.Today.ToString("dd/MM/yyyy");
-            log.Hora = DateTime.Now.ToString("HH:mm");
-            log.Usuario = usuariosDAO.select(Variaveis.getIdUsuario());
-
-            db.Acoes.Attach(log.Acao);
-            db.Usuarios.Attach(log.Usuario);
-            db.Logs.Add(log);
-
             db.SaveChanges();
+            
+            // Inserção de log de alteração de fornecedor
+            logsDAO.insert(12);
         }
 
         public void delete(int id)
         {
             Fornecedores fornecedorExc = db.Fornecedores.Where(x => x.Id == id).First();
             fornecedorExc.Excluido = true;
-
-            // Inserção de log de exclusão de fornecedor
-            Logs log = new Logs();
-            log.Acao = acoesDAO.select(13);
-            log.Data = DateTime.Today.ToString("dd/MM/yyyy");
-            log.Hora = DateTime.Now.ToString("HH:mm");
-            log.Usuario = usuariosDAO.select(Variaveis.getIdUsuario());
-
-            db.Acoes.Attach(log.Acao);
-            db.Usuarios.Attach(log.Usuario);
-            db.Logs.Add(log);
-
             db.SaveChanges();
+            
+            // Inserção de log de exclusão de fornecedor
+            logsDAO.insert(13);
         }
 
         public IEnumerable<Fornecedores> select()

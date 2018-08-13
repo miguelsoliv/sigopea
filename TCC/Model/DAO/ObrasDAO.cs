@@ -2,21 +2,18 @@
 using System.Linq;
 using TCC.Model.Classes;
 using System.Data.Entity;
-using System;
 
 namespace TCC.Model.DAO
 {
     class ObrasDAO
     {
         private ModelDB db { get; set; }
-        private AcoesDAO acoesDAO { get; set; }
-        private UsuariosDAO usuariosDAO { get; set; }
+        private LogsDAO logsDAO { get; set; }
 
         public ObrasDAO()
         {
             db = new ModelDB();
-            acoesDAO = new AcoesDAO();
-            usuariosDAO = new UsuariosDAO();
+            logsDAO = new LogsDAO();
         }
 
         public void insert(Obras obraInf)
@@ -33,24 +30,14 @@ namespace TCC.Model.DAO
 
             }
             db.Obras.Add(obraInf);
+            db.SaveChanges();
 
             // Inserção de log de inclusão de obra
-            Logs log = new Logs();
-            log.Acao = acoesDAO.select(14);
-            log.Data = DateTime.Today.ToString("dd/MM/yyyy");
-            log.Hora = DateTime.Now.ToString("HH:mm");
-            log.Usuario = usuariosDAO.select(Variaveis.getIdUsuario());
-
-            db.Acoes.Attach(log.Acao);
-            db.Usuarios.Attach(log.Usuario);
-            db.Logs.Add(log);
-
-            db.SaveChanges();
+            logsDAO.insert(14);
         }
 
         public void update(Obras obraInf)
         {
-            #region Alteração de obra
             obraInf.Cidade = db.Cidades.Where(x => x.Id == obraInf.Cidade.Id).First();
             obraInf.Cliente = db.Clientes.Where(x => x.Id == obraInf.Cliente.Id).First();
             obraInf.Status = db.Status.Where(x => x.Id == obraInf.Status.Id).First();
@@ -62,7 +49,7 @@ namespace TCC.Model.DAO
             {
 
             }
-            // posiciona no registro a ser alterado
+
             Obras obraAlt = db.Obras.Where(x => x.Id == obraInf.Id).First();
             obraAlt.Cidade = obraInf.Cidade;
             obraAlt.Cliente = obraInf.Cliente;
@@ -74,39 +61,20 @@ namespace TCC.Model.DAO
             obraAlt.Preco = obraInf.Preco;
             obraAlt.Responsavel = obraInf.Responsavel;
             obraAlt.Status = obraInf.Status;
-            #endregion
+            db.SaveChanges();
 
             // Inserção de log de alteração de obra
-            Logs log = new Logs();
-            log.Acao = acoesDAO.select(15);
-            log.Data = DateTime.Today.ToString("dd/MM/yyyy");
-            log.Hora = DateTime.Now.ToString("HH:mm");
-            log.Usuario = usuariosDAO.select(Variaveis.getIdUsuario()); ;
-
-            db.Acoes.Attach(log.Acao);
-            db.Usuarios.Attach(log.Usuario);
-            db.Logs.Add(log);
-
-            db.SaveChanges();
+            logsDAO.insert(15);
         }
 
         public void delete(int id)
         {
             Obras obraExc = db.Obras.Where(x => x.Id == id).First();
             obraExc.Excluido = true;
+            db.SaveChanges();
 
             // Inserção de log de exclusão de obra
-            Logs log = new Logs();
-            log.Acao = acoesDAO.select(16);
-            log.Data = DateTime.Today.ToString("dd/MM/yyyy");
-            log.Hora = DateTime.Now.ToString("HH:mm");
-            log.Usuario = usuariosDAO.select(Variaveis.getIdUsuario());
-
-            db.Acoes.Attach(log.Acao);
-            db.Usuarios.Attach(log.Usuario);
-            db.Logs.Add(log);
-
-            db.SaveChanges();
+            logsDAO.insert(16);
         }
 
         public IEnumerable<Obras> select()

@@ -43,5 +43,16 @@ namespace TCC.Model.DAO
             // Selecionar palavra proibida pelo ID, utilizado na parte de carregar os dados na alteração de palavra proibida
             return db.PalavrasProibidas.Where(x => x.Id == id).First();
         }
+
+        public bool validacaoPalavra(string palavra)
+        {
+            // Verificar se já foi cadastrada a palavra informada
+            if (select().Where(x => x.Palavra.ToUpper() == palavra.Trim().ToUpper()).Count() == 1)
+            {
+                return false;
+            }
+
+            return true;
+        }
     }
 }

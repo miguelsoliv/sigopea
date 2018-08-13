@@ -83,15 +83,15 @@ namespace TCC.Model
 
             senhaOculta = (Bitmap)resxSet.GetObject("passwd_20x20", true);
             senhaVisivel = (Bitmap)resxSet.GetObject("passwd_2_20x20", true);
-            email = (Bitmap)resxSet.GetObject("email_32x32.png", true);
-            obs = (Bitmap)resxSet.GetObject("note_48x48.png", true);
-            agend = (Bitmap)resxSet.GetObject("appointment_32x32.png", true);
-            foto = (Bitmap)resxSet.GetObject("camera_48x48.png", true);
-            trab = (Bitmap)resxSet.GetObject("worker_24x24.png", true);
-            forn = (Bitmap)resxSet.GetObject("provider_24x24.png", true);
-            salvar = (Bitmap)resxSet.GetObject("save_24x24.png", true);
-            alterar = (Bitmap)resxSet.GetObject("edit_24x24.png", true);
-            reg = (Bitmap)resxSet.GetObject("reg_32x32.png", true);
+            email = (Bitmap)resxSet.GetObject("email_32x32", true);
+            obs = (Bitmap)resxSet.GetObject("note_48x48", true);
+            agend = (Bitmap)resxSet.GetObject("appointment_32x32", true);
+            foto = (Bitmap)resxSet.GetObject("camera_48x48", true);
+            trab = (Bitmap)resxSet.GetObject("worker_24x24", true);
+            forn = (Bitmap)resxSet.GetObject("provider_24x24", true);
+            salvar = (Bitmap)resxSet.GetObject("save_24x24", true);
+            alterar = (Bitmap)resxSet.GetObject("edit_24x24", true);
+            reg = (Bitmap)resxSet.GetObject("reg_32x32", true);
         }
 
         public static int getIdUsuario()

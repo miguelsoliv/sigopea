@@ -57,7 +57,6 @@ namespace TCC.View.Admin
 
         private void dataGridView_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
         {
-            #region Ao dar dois cliques em alguma "cell" do dataGridView, muda a visibilidade e o nome do groupBox (alteração)
             if (e.RowIndex >= 0 && e.ColumnIndex <= 6)
             {
                 groupBoxPalavras.Visible = true;
@@ -65,18 +64,15 @@ namespace TCC.View.Admin
                 groupBoxPalavras.Text = "Alteração de Palavra Proibida";
                 carregarInfPalavra();
             }
-            #endregion
         }
 
         private void dataGridView_SelectionChanged(object sender, EventArgs e)
         {
-            #region Carregar dados da palavra proibida no groupBox [carregarInfPalavra()] quando o administrador mudar a palavra selecionada
             if (groupBoxPalavras.Visible == true)
             {
                 groupBoxPalavras.Text = "Alteração de Palavra Proibida";
                 carregarInfPalavra();
             }
-            #endregion
         }
 
         private void btSalvar_Click(object sender, EventArgs e)
@@ -149,10 +145,8 @@ namespace TCC.View.Admin
 
         private void carregarPalavras()
         {
-            // Carregar palavras proibidas no dataGridView
             dataGridView.Rows.Clear();
 
-            // preenche as colunas
             foreach (PalavrasProibidas p in palavrasDAO.select())
             {
                 dataGridView.Rows.Add(p.Id, p.Palavra);
@@ -185,10 +179,23 @@ namespace TCC.View.Admin
             switch (groupBoxPalavras.Text)
             {
                 case "Inclusão de Palavra Proibida":
+                    if (!palavrasDAO.validacaoPalavra(textPalavra.Text.Trim()))
+                    {
+                        errorProvider.SetError(textPalavra, "Palavra já cadastrada");
+                        return;
+                    }
+
                     palavrasDAO.insert(palavra);
                     break;
                 case "Alteração de Palavra Proibida":
                     palavra.Id = Convert.ToInt16(dataGridView.CurrentRow.Cells["ID"].Value.ToString());
+
+                    if (!palavrasDAO.validacaoPalavra(textPalavra.Text.Trim()))
+                    {
+                        errorProvider.SetError(textPalavra, "Palavra já cadastrada");
+                        return;
+                    }
+
                     palavrasDAO.update(palavra);
                     break;
             }
@@ -199,7 +206,6 @@ namespace TCC.View.Admin
 
         private void limparCampos()
         {
-            // Limpar campos do groupBox
             errorProvider.SetError(textPalavra, string.Empty);
             textPalavra.Clear();
             groupBoxPalavras.Visible = false;

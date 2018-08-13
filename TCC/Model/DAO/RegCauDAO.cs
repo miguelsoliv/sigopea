@@ -7,14 +7,10 @@ namespace TCC.Model.DAO
     class RegCauDAO
     {
         private ModelDB db { get; set; }
-        private AcoesDAO acoesDAO { get; set; }
-        private UsuariosDAO usuariosDAO { get; set; }
 
         public RegCauDAO()
         {
             db = new ModelDB();
-            acoesDAO = new AcoesDAO();
-            usuariosDAO = new UsuariosDAO();
         }
 
         public void insert(RegCau cauInf)

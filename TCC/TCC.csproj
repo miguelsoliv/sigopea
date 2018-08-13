@@ -73,39 +73,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Migrations\201608151337523_regCreaCau.cs" />
-    <Compile Include="Migrations\201608151337523_regCreaCau.Designer.cs">
-      <DependentUpon>201608151337523_regCreaCau.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201608221349040_tabelasNNDosRegistros.cs" />
-    <Compile Include="Migrations\201608221349040_tabelasNNDosRegistros.Designer.cs">
-      <DependentUpon>201608221349040_tabelasNNDosRegistros.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201608241401175_tabelasNNDasPessoas.cs" />
-    <Compile Include="Migrations\201608241401175_tabelasNNDasPessoas.Designer.cs">
-      <DependentUpon>201608241401175_tabelasNNDasPessoas.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201609121946528_criacaoDeLogs.cs" />
-    <Compile Include="Migrations\201609121946528_criacaoDeLogs.Designer.cs">
-      <DependentUpon>201609121946528_criacaoDeLogs.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201609122203319_mudancaTipoDeAtributo.cs" />
-    <Compile Include="Migrations\201609122203319_mudancaTipoDeAtributo.Designer.cs">
-      <DependentUpon>201609122203319_mudancaTipoDeAtributo.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201609130049449_mudancaTipoDeAtributo2.cs" />
-    <Compile Include="Migrations\201609130049449_mudancaTipoDeAtributo2.Designer.cs">
-      <DependentUpon>201609130049449_mudancaTipoDeAtributo2.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201609281805250_criacaoDePalavrasProibidas.cs" />
-    <Compile Include="Migrations\201609281805250_criacaoDePalavrasProibidas.Designer.cs">
-      <DependentUpon>201609281805250_criacaoDePalavrasProibidas.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201611160236172_alteracoesFinais.cs" />
-    <Compile Include="Migrations\201611160236172_alteracoesFinais.Designer.cs">
-      <DependentUpon>201611160236172_alteracoesFinais.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Classes\Acoes.cs" />
     <Compile Include="Model\Classes\Agendamentos.cs" />
     <Compile Include="Model\Classes\Cidades.cs" />
@@ -311,30 +278,6 @@
     <Compile Include="View\RelObras.Designer.cs">
       <DependentUpon>RelObras.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="Migrations\201608151337523_regCreaCau.resx">
-      <DependentUpon>201608151337523_regCreaCau.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201608221349040_tabelasNNDosRegistros.resx">
-      <DependentUpon>201608221349040_tabelasNNDosRegistros.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201608241401175_tabelasNNDasPessoas.resx">
-      <DependentUpon>201608241401175_tabelasNNDasPessoas.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201609121946528_criacaoDeLogs.resx">
-      <DependentUpon>201609121946528_criacaoDeLogs.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201609122203319_mudancaTipoDeAtributo.resx">
-      <DependentUpon>201609122203319_mudancaTipoDeAtributo.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201609130049449_mudancaTipoDeAtributo2.resx">
-      <DependentUpon>201609130049449_mudancaTipoDeAtributo2.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201609281805250_criacaoDePalavrasProibidas.resx">
-      <DependentUpon>201609281805250_criacaoDePalavrasProibidas.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201611160236172_alteracoesFinais.resx">
-      <DependentUpon>201611160236172_alteracoesFinais.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

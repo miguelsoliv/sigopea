@@ -2,21 +2,18 @@
 using System.Linq;
 using TCC.Model.Classes;
 using System.Data.Entity;
-using System;
 
 namespace TCC.Model.DAO
 {
     class ProjetosDAO
     {
         private ModelDB db { get; set; }
-        private AcoesDAO acoesDAO { get; set; }
-        private UsuariosDAO usuariosDAO { get; set; }
+        private LogsDAO logsDAO { get; set; }
 
         public ProjetosDAO()
         {
             db = new ModelDB();
-            acoesDAO = new AcoesDAO();
-            usuariosDAO = new UsuariosDAO();
+            logsDAO = new LogsDAO();
         }
 
         public void insert(Projetos projetoInf)
@@ -25,28 +22,18 @@ namespace TCC.Model.DAO
             projetoInf.Cliente = db.Clientes.Where(x => x.Id == projetoInf.Cliente.Id).First();
             projetoInf.Status = db.Status.Where(x => x.Id == projetoInf.Status.Id).First();
             db.Projetos.Add(projetoInf);
+            db.SaveChanges();
 
             // Inserção de log de inclusão de projeto
-            Logs log = new Logs();
-            log.Acao = acoesDAO.select(17);
-            log.Data = DateTime.Today.ToString("dd/MM/yyyy");
-            log.Hora = DateTime.Now.ToString("HH:mm");
-            log.Usuario = usuariosDAO.select(Variaveis.getIdUsuario());
-
-            db.Acoes.Attach(log.Acao);
-            db.Usuarios.Attach(log.Usuario);
-            db.Logs.Add(log);
-
-            db.SaveChanges();
+            logsDAO.insert(17);
         }
 
         public void update(Projetos projetoInf)
         {
-            #region Alteração de projeto
             projetoInf.Cidade = db.Cidades.Where(x => x.Id == projetoInf.Cidade.Id).First();
             projetoInf.Cliente = db.Clientes.Where(x => x.Id == projetoInf.Cliente.Id).First();
             projetoInf.Status = db.Status.Where(x => x.Id == projetoInf.Status.Id).First();
-            // posiciona no registro a ser alterado
+
             Projetos projetoAlt = db.Projetos.Where(x => x.Id == projetoInf.Id).First();
             projetoAlt.Cidade = projetoInf.Cidade;
             projetoAlt.Cliente = projetoInf.Cliente;
@@ -57,39 +44,20 @@ namespace TCC.Model.DAO
             projetoAlt.PrazoEstipulado = projetoInf.PrazoEstipulado;
             projetoAlt.Preco = projetoInf.Preco;
             projetoAlt.Status = projetoInf.Status;
-            #endregion
+            db.SaveChanges();
 
             // Inserção de log de alteração de projeto
-            Logs log = new Logs();
-            log.Acao = acoesDAO.select(18);
-            log.Data = DateTime.Today.ToString("dd/MM/yyyy");
-            log.Hora = DateTime.Now.ToString("HH:mm");
-            log.Usuario = usuariosDAO.select(Variaveis.getIdUsuario());
-
-            db.Acoes.Attach(log.Acao);
-            db.Usuarios.Attach(log.Usuario);
-            db.Logs.Add(log);
-
-            db.SaveChanges();
+            logsDAO.insert(18);
         }
 
         public void delete(int id)
         {
             Projetos projetoExc = db.Projetos.Where(x => x.Id == id).First();
             projetoExc.Excluido = true;
+            db.SaveChanges();
 
             // Inserção de log de exclusão de projeto
-            Logs log = new Logs();
-            log.Acao = acoesDAO.select(19);
-            log.Data = DateTime.Today.ToString("dd/MM/yyyy");
-            log.Hora = DateTime.Now.ToString("HH:mm");
-            log.Usuario = usuariosDAO.select(Variaveis.getIdUsuario());
-
-            db.Acoes.Attach(log.Acao);
-            db.Usuarios.Attach(log.Usuario);
-            db.Logs.Add(log);
-
-            db.SaveChanges();
+            logsDAO.insert(19);
         }
 
         public IEnumerable<Projetos> select()

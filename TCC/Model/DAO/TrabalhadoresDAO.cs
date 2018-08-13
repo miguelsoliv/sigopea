@@ -2,47 +2,34 @@
 using System.Linq;
 using TCC.Model.Classes;
 using System.Data.Entity;
-using System;
 
 namespace TCC.Model.DAO
 {
     class TrabalhadoresDAO
     {
         private ModelDB db { get; set; }
-        private AcoesDAO acoesDAO { get; set; }
-        private UsuariosDAO usuariosDAO { get; set; }
+        private LogsDAO logsDAO { get; set; }
 
         public TrabalhadoresDAO()
         {
             db = new ModelDB();
-            acoesDAO = new AcoesDAO();
-            usuariosDAO = new UsuariosDAO();
+            logsDAO = new LogsDAO();
         }
 
         public void insert(Trabalhadores trabalhadorInf)
         {
             trabalhadorInf.Cidade = db.Cidades.Where(x => x.Id == trabalhadorInf.Cidade.Id).First();
             db.Trabalhadores.Add(trabalhadorInf);
+            db.SaveChanges();
 
             // Inserção de log de inclusão de trabalhador
-            Logs log = new Logs();
-            log.Acao = acoesDAO.select(8);
-            log.Data = DateTime.Today.ToString("dd/MM/yyyy");
-            log.Hora = DateTime.Now.ToString("HH:mm");
-            log.Usuario = usuariosDAO.select(Variaveis.getIdUsuario());
-
-            db.Acoes.Attach(log.Acao);
-            db.Usuarios.Attach(log.Usuario);
-            db.Logs.Add(log);
-
-            db.SaveChanges();
+            logsDAO.insert(8);
         }
 
         public void update(Trabalhadores trabalhadorInf)
         {
-            #region Alteração de trabalhador
             trabalhadorInf.Cidade = db.Cidades.Where(x => x.Id == trabalhadorInf.Cidade.Id).First();
-            // posiciona no registro a ser alterado
+
             Trabalhadores trabalhadorAlt = db.Trabalhadores.Where(x => x.Id == trabalhadorInf.Id).First();
             trabalhadorAlt.Cidade = trabalhadorInf.Cidade;
             trabalhadorAlt.Nome = trabalhadorInf.Nome;
@@ -52,39 +39,20 @@ namespace TCC.Model.DAO
             trabalhadorAlt.Endereco = trabalhadorInf.Endereco;
             trabalhadorAlt.Telefone = trabalhadorInf.Telefone;
             trabalhadorAlt.Telefone2 = trabalhadorInf.Telefone2;
-            #endregion
+            db.SaveChanges();
 
             // Inserção de log de alteração de trabalhador
-            Logs log = new Logs();
-            log.Acao = acoesDAO.select(9);
-            log.Data = DateTime.Today.ToString("dd/MM/yyyy");
-            log.Hora = DateTime.Now.ToString("HH:mm");
-            log.Usuario = usuariosDAO.select(Variaveis.getIdUsuario());
-
-            db.Acoes.Attach(log.Acao);
-            db.Usuarios.Attach(log.Usuario);
-            db.Logs.Add(log);
-
-            db.SaveChanges();
+            logsDAO.insert(9);
         }
 
         public void delete(int id)
         {
             Trabalhadores trabalhadorExc = db.Trabalhadores.Where(x => x.Id == id).First();
             trabalhadorExc.Excluido = true;
+            db.SaveChanges();
 
             // Inserção de log de exclusão de trabalhador
-            Logs log = new Logs();
-            log.Acao = acoesDAO.select(10);
-            log.Data = DateTime.Today.ToString("dd/MM/yyyy");
-            log.Hora = DateTime.Now.ToString("HH:mm");
-            log.Usuario = usuariosDAO.select(Variaveis.getIdUsuario());
-
-            db.Acoes.Attach(log.Acao);
-            db.Usuarios.Attach(log.Usuario);
-            db.Logs.Add(log);
-
-            db.SaveChanges();
+            logsDAO.insert(10);
         }
 
         public IEnumerable<Trabalhadores> select()

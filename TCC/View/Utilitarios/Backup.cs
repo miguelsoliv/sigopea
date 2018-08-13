@@ -463,14 +463,12 @@ namespace TCC.View
                         {
                             arrumarBuilder(sw);
                             inserts.Append("INSERT INTO Logs(Usuario_Id, Acao_Id, Data, Hora) VALUES\n");
-                            inserts.Append("(" + logs.Usuario.Id + ", '" + logs.Acao.Id + "', '" + logs.Data + "', '" +
-                                logs.Hora + "'),\n");
+                            inserts.Append("(" + logs.Usuario.Id + ", '" + logs.Acao.Id + "', '" + logs.Data + "'),\n");
                             limite = 0;
                         }
                         else
                         {
-                            inserts.Append("(" + logs.Usuario.Id + ", '" + logs.Acao.Id + "', '" + logs.Data + "', '" +
-                                logs.Hora + "'),\n");
+                            inserts.Append("(" + logs.Usuario.Id + ", '" + logs.Acao.Id + "', '" + logs.Data + "'),\n");
                             limite++;
                         }
                     }

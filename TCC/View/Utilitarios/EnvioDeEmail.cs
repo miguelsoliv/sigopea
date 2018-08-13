@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 using TCC.Model;
-using TCC.Model.Classes;
 using TCC.Model.DAO;
 
 namespace TCC.View
@@ -73,12 +72,7 @@ namespace TCC.View
                 listCaminhos.Clear();
 
                 // Inserção de log de envio de e-mail
-                Logs log = new Logs();
-                log.Acao = acoesDAO.select(3);
-                log.Data = DateTime.Today.ToString("dd/MM/yyyy");
-                log.Hora = DateTime.Now.ToString("HH:mm");
-                log.Usuario = usuariosDAO.select(Variaveis.getIdUsuario());
-                logsDAO.insert(log);
+                logsDAO.insert(3);
             }
             else
             {
