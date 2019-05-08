@@ -13,7 +13,6 @@ namespace TCC.View
             this.MouseClick += new MouseEventHandler(fecharNotificacao);
             label1.MouseClick += new MouseEventHandler(fecharNotificacao);
             label2.MouseClick += new MouseEventHandler(fecharNotificacao);
-            panel.MouseClick += new MouseEventHandler(fecharNotificacao);
 
             switch (dias)
             {
